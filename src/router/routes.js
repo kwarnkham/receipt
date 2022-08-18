@@ -20,6 +20,14 @@ const routes = [
         },
       },
       {
+        path: "receipt/:id",
+        component: () => import("pages/CreateReceipt.vue"),
+        name: "receipt",
+        meta: {
+          requireAuth: true,
+        },
+      },
+      {
         path: "login",
         component: () => import("pages/LoginPage.vue"),
         name: "login",
