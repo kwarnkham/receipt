@@ -7,11 +7,17 @@ const routes = [
         path: "",
         component: () => import("pages/IndexPage.vue"),
         name: "index",
+        meta: {
+          requireAuth: true,
+        },
       },
       {
         path: "create-receipt",
         component: () => import("pages/CreateReceipt.vue"),
         name: "createReceipt",
+        meta: {
+          requireAuth: true,
+        },
       },
       {
         path: "login",
