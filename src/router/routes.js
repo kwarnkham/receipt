@@ -11,7 +11,12 @@ const routes = [
       {
         path: "create-receipt",
         component: () => import("pages/CreateReceipt.vue"),
-        name: "index",
+        name: "createReceipt",
+      },
+      {
+        path: "login",
+        component: () => import("pages/LoginPage.vue"),
+        name: "login",
       },
     ],
   },
