@@ -9,6 +9,7 @@ const routes = [
         name: "index",
         meta: {
           requireAuth: true,
+          label: "Home",
         },
       },
       {
@@ -17,6 +18,7 @@ const routes = [
         name: "createReceipt",
         meta: {
           requireAuth: true,
+          label: "New Receipt",
         },
       },
       {
@@ -31,6 +33,17 @@ const routes = [
         path: "login",
         component: () => import("pages/LoginPage.vue"),
         name: "login",
+        meta: {
+          label: "Login",
+        },
+      },
+      {
+        path: "receipts",
+        component: () => import("pages/ReceiptsPage.vue"),
+        name: "receipts",
+        meta: {
+          label: "Receipts",
+        },
       },
     ],
   },
