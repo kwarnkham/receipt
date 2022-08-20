@@ -8,7 +8,12 @@
       </q-card-section>
       <q-card-section v-if="suggestedItems.length">
         <q-list>
-          <q-item v-for="value in suggestedItems" :key="value.name">
+          <q-item
+            v-for="value in suggestedItems"
+            :key="value.name"
+            clickable
+            @click="fillItem(value)"
+          >
             <q-item-section>{{ value.name }}</q-item-section>
           </q-item>
         </q-list>
@@ -28,6 +33,7 @@
 
 <script setup>
 import { useDialogPluginComponent, useQuasar } from "quasar";
+import { useUserStore } from "src/stores/user";
 import { computed, ref } from "vue";
 
 const props = defineProps({
@@ -43,11 +49,20 @@ const name = ref(props.item.name);
 const price = ref(props.item.price);
 const quantity = ref(props.item.quantity || "1");
 
-const knownItems = localStorage.getItem("knownItems") ?? [];
+const userStore = useUserStore();
+const knownItems =
+  localStorage.getItem(userStore.getUser.id + "knownItems") ?? [];
 const suggestedItems = computed(() => {
   if (!name.value) return [];
-  return knownItems.filter((e) => e.name.toLowerCase().includes(name.value));
+  return knownItems.filter((e) =>
+    e.name.toLowerCase().includes(name.value.toLowerCase())
+  );
 });
+
+const fillItem = (item) => {
+  name.value = item.name;
+  price.value = item.price;
+};
 
 defineEmits([
   // REQUIRED; need to specify some events that your

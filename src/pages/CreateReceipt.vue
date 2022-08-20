@@ -22,6 +22,7 @@ import { useRoute } from "vue-router";
 import ReceiptHeader from "../components/ReceiptHeader.vue";
 import ReceiptBody from "src/components/ReceiptBody.vue";
 import ReceiptSummery from "src/components/ReceiptSummery.vue";
+import { useUserStore } from "src/stores/user";
 
 const { loading, localStorage } = useQuasar();
 const { pageOptions } = useUtility();
@@ -30,7 +31,7 @@ const { errorNotify, successNotify } = useApp();
 const route = useRoute();
 const header = ref(null);
 const summery = ref(null);
-
+const userStore = useUserStore();
 const addRow = () => {
   items.value.push({
     key: items.value.length + 1,
@@ -64,16 +65,17 @@ const submit = () => {
   })
     .then((data) => {
       receipt.value = data;
-      const knownItems = localStorage.getItem("knownItems") ?? [];
+      const knownItems =
+        localStorage.getItem(userStore.getUser.id + "knownItems") ?? [];
 
       if (knownItems.length == 0)
         localStorage.set(
-          "knownItems",
+          userStore.getUser.id + "knownItems",
           orderItems.value.map((e) => ({ name: e.name, price: e.price }))
         );
       else {
         localStorage.set(
-          "knownItems",
+          userStore.getUser.id + "knownItems",
           [
             ...orderItems.value.map((e) => ({ name: e.name, price: e.price })),
             ...knownItems,
