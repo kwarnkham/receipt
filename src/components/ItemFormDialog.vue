@@ -1,13 +1,8 @@
 <template>
-  <q-dialog ref="dialogRef" @hide="onDialogHide" persistent>
+  <q-dialog ref="dialogRef" @hide="onDialogHide" persistent position="bottom">
     <q-card class="q-dialog-plugin">
-      <q-card-section>
-        <q-input :label="'Item name'" v-model="name" autofocus />
-        <q-input :label="'Price'" v-model="price" type="tel" />
-        <q-input :label="'Quantity'" v-model="quantity" type="tel" />
-      </q-card-section>
       <q-card-section v-if="suggestedItems.length">
-        <q-list>
+        <q-list dense>
           <q-item
             v-for="value in suggestedItems"
             :key="value.name"
@@ -18,6 +13,12 @@
           </q-item>
         </q-list>
       </q-card-section>
+      <q-card-section>
+        <q-input :label="'Item name'" v-model="name" autofocus />
+        <q-input :label="'Price'" v-model="price" type="tel" />
+        <q-input :label="'Quantity'" v-model="quantity" type="tel" />
+      </q-card-section>
+
       <q-card-actions align="right">
         <q-btn
           color="primary"
