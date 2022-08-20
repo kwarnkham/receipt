@@ -6,6 +6,13 @@
         <q-input :label="'Price'" v-model="price" type="tel" />
         <q-input :label="'Quantity'" v-model="quantity" type="tel" />
       </q-card-section>
+      <q-card-section v-if="suggestedItems.length">
+        <q-list>
+          <q-item v-for="value in suggestedItems" :key="value.name">
+            <q-item-section>{{ value.name }}</q-item-section>
+          </q-item>
+        </q-list>
+      </q-card-section>
       <q-card-actions align="right">
         <q-btn
           color="primary"
@@ -20,7 +27,7 @@
 </template>
 
 <script setup>
-import { useDialogPluginComponent } from "quasar";
+import { useDialogPluginComponent, useQuasar } from "quasar";
 import { computed, ref } from "vue";
 
 const props = defineProps({
@@ -30,9 +37,17 @@ const props = defineProps({
   },
 });
 
-const name = ref("");
-const price = ref("");
-const quantity = ref("1");
+const { localStorage } = useQuasar();
+
+const name = ref(props.item.name);
+const price = ref(props.item.price);
+const quantity = ref(props.item.quantity || "1");
+
+const knownItems = localStorage.getItem("knownItems") ?? [];
+const suggestedItems = computed(() => {
+  if (!name.value) return [];
+  return knownItems.filter((e) => e.name.toLowerCase().includes(name.value));
+});
 
 defineEmits([
   // REQUIRED; need to specify some events that your
@@ -50,7 +65,14 @@ const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
 // onDialogCancel - Function to call to settle dialog with "cancel" outcome
 
 // this is part of our example (so not required)
-const filled = computed(() => name.value && price.value && quantity.value);
+const filled = computed(
+  () =>
+    name.value &&
+    price.value &&
+    quantity.value &&
+    Number(price.value) &&
+    Number(quantity.value)
+);
 function onOKClick() {
   onDialogOK({
     key: props.item.key,

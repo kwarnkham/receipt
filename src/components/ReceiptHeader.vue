@@ -56,8 +56,9 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onBeforeMount, onMounted, ref } from "vue";
 import { date } from "quasar";
+import { emitter } from "src/boot/eventEmitter";
 const { formatDate } = date;
 defineProps({
   receipt: {
@@ -78,6 +79,18 @@ defineExpose({
   mobile,
   address,
   orderDate,
+});
+const resetData = () => {
+  name.value = "";
+  mobile.value = "";
+  address.value = "";
+  orderDate.value = formatDate(Date.now(), "YYYY-MM-DD");
+};
+onMounted(() => {
+  emitter.on("addNewReceipt", resetData);
+});
+onBeforeMount(() => {
+  emitter.off("addNewReceipt", resetData);
 });
 </script>
 
