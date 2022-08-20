@@ -55,16 +55,16 @@
 <script setup>
 import { computed, ref } from "vue";
 import routes from "src/router/routes";
-import { useQuasar } from "quasar";
+import { useUserStore } from "src/stores/user";
 const { children } = routes[0];
-const { localStorage } = useQuasar();
 const leftDrawerOpen = ref(false);
 const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 };
+const userStore = useUserStore();
 const links = computed(() =>
   children.filter((e) => {
-    if (localStorage.getItem("token")) return e.name != "login" && e.meta.label;
+    if (userStore.getUser) return e.name != "login" && e.meta.label;
     else return e.meta.label;
   })
 );
