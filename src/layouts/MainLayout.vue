@@ -22,7 +22,11 @@
         <q-toolbar-title> Quasar App </q-toolbar-title>
 
         <div>
-          <q-btn icon="touch_app" flat v-if="$route.name == 'createReceipt'">
+          <q-btn
+            icon="touch_app"
+            flat
+            v-if="$route.name == 'createReceipt' || $route.name == 'receipt'"
+          >
             <q-menu max-width="57px">
               <q-btn icon="save" flat @click="$emitter.emit('createReceipt')" />
               <q-btn icon="add" flat @click="$emitter.emit('addNewReceipt')" />

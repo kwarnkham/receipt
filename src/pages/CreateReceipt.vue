@@ -1,7 +1,12 @@
 <template>
   <q-page :style-fn="pageOptions" class="column q-px-xs page">
     <ReceiptHeader :receipt="receipt" ref="header" />
-    <ReceiptBody :items="items" @addRow="addRow" :receipt="receipt" />
+    <ReceiptBody
+      :items="items"
+      @addRow="addRow"
+      :receipt="receipt"
+      @itemFilled="fillItem"
+    />
     <ReceiptSummery :receipt="receipt" :items="items" ref="summery" />
   </q-page>
 </template>
@@ -11,7 +16,7 @@ import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { useQuasar } from "quasar";
 import useUtility from "src/composables/utility";
 import useBackend from "src/composables/backend";
-import { emitter } from "src/boot/emitter";
+import { emitter } from "src/boot/eventEmitter";
 import useApp from "src/composables/app";
 import { useRoute } from "vue-router";
 import ReceiptHeader from "../components/ReceiptHeader.vue";
@@ -62,6 +67,10 @@ const submit = () => {
     .finally(() => {
       loading.hide();
     });
+};
+const fillItem = (item) => {
+  const index = items.value.findIndex((e) => e.key == item.key);
+  if (index >= 0) items.value.splice(index, 1, item);
 };
 const receipt = ref(null);
 

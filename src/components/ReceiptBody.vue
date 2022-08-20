@@ -3,7 +3,6 @@
     class="col bg-transparent"
     separator="cell"
     wrap-cells
-    dense
     bordered
     flat
   >
@@ -17,66 +16,20 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="item in items" :key="item.key">
+      <tr v-for="item in items" :key="item.key" @click="fillItem(item)">
         <td class="text-left">{{ item.key }}</td>
 
         <td class="text-left">
           {{ item.name }}
-          <q-popup-edit
-            :disable="!!receipt"
-            :title="'Item name'"
-            auto-save
-            v-model="item.name"
-            v-slot="scope"
-          >
-            <q-input
-              v-model="scope.value"
-              dense
-              autofocus
-              @keyup.enter="scope.set"
-            />
-          </q-popup-edit>
         </td>
 
         <td class="text-right">
           {{ item.quantity }}
-          <q-popup-edit
-            :disable="!!receipt"
-            :validate="validateNumber"
-            :title="'Quantity'"
-            auto-save
-            v-model="item.quantity"
-            v-slot="scope"
-          >
-            <q-input
-              v-model="scope.value"
-              dense
-              autofocus
-              @keyup.enter="scope.set"
-              type="tel"
-            />
-          </q-popup-edit>
         </td>
         <td class="text-right">
           <span v-if="item.price">
             {{ formatCurrency(item.price) }}
           </span>
-          <q-popup-edit
-            :disable="!!receipt"
-            :title="'Price'"
-            :validate="validateNumber"
-            auto-save
-            v-model="item.price"
-            v-slot="scope"
-          >
-            <q-input
-              v-model="scope.value"
-              dense
-              autofocus
-              @keyup.enter="scope.set"
-              type="tel"
-            />
-          </q-popup-edit>
         </td>
         <td class="text-right">
           <span v-if="item.quantity * item.price">
@@ -101,10 +54,11 @@
 </template>
 
 <script setup>
-import useApp from "src/composables/app";
+import { useQuasar } from "quasar";
 import useUtility from "src/composables/utility";
+import ItemFormDialog from "src/components/ItemFormDialog";
 
-defineProps({
+const props = defineProps({
   items: {
     type: Array,
     required: true,
@@ -114,10 +68,22 @@ defineProps({
   },
 });
 
-defineEmits(["addRow"]);
+const emit = defineEmits(["addRow", "itemFilled"]);
 
-const { validateNumber } = useApp();
 const { formatCurrency } = useUtility();
+const { dialog } = useQuasar();
+
+const fillItem = (item) => {
+  if (props.receipt) return;
+  dialog({
+    component: ItemFormDialog,
+    componentProps: {
+      item,
+    },
+  }).onOk((item) => {
+    emit("itemFilled", item);
+  });
+};
 </script>
 
 <style scoped lang="scss">

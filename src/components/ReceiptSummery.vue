@@ -77,7 +77,7 @@
 </template>
 
 <script setup>
-import { emitter } from "src/boot/emitter";
+import { emitter } from "src/boot/eventEmitter";
 import useApp from "src/composables/app";
 import useUtility from "src/composables/utility";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
@@ -93,8 +93,8 @@ const props = defineProps({
 });
 const { formatCurrency } = useUtility();
 const { validateNumber } = useApp();
-const discount = ref(0);
-const deposit = ref(0);
+const discount = ref("");
+const deposit = ref("");
 const total = computed(() =>
   props.items.reduce((carry, item) => carry + item.price * item.quantity, 0)
 );
@@ -106,8 +106,8 @@ defineExpose({
   discount,
 });
 const resetData = () => {
-  deposit.value = 0;
-  discount.value = 0;
+  deposit.value = "";
+  discount.value = "";
 };
 onMounted(() => {
   emitter.on("addNewReceipt", resetData);
