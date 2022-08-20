@@ -7,6 +7,7 @@ export default function useApp() {
   const userStore = useUserStore();
 
   return {
+    validateNumber: (value) => !isNaN(Number(value)),
     infoNotify: (message) => {
       notify({
         message,

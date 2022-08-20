@@ -1,0 +1,135 @@
+<template>
+  <q-markup-table
+    class="col bg-transparent"
+    separator="cell"
+    wrap-cells
+    dense
+    bordered
+    flat
+  >
+    <thead>
+      <tr>
+        <th class="text-left">#</th>
+        <th class="text-left">Name</th>
+        <th class="text-right">Quantity</th>
+        <th class="text-right">Price</th>
+        <th class="text-right">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="item in items" :key="item.key">
+        <td class="text-left">{{ item.key }}</td>
+
+        <td class="text-left">
+          {{ item.name }}
+          <q-popup-edit
+            :disable="!!receipt"
+            :title="'Item name'"
+            auto-save
+            v-model="item.name"
+            v-slot="scope"
+          >
+            <q-input
+              v-model="scope.value"
+              dense
+              autofocus
+              @keyup.enter="scope.set"
+            />
+          </q-popup-edit>
+        </td>
+
+        <td class="text-right">
+          {{ item.quantity }}
+          <q-popup-edit
+            :disable="!!receipt"
+            :validate="validateNumber"
+            :title="'Quantity'"
+            auto-save
+            v-model="item.quantity"
+            v-slot="scope"
+          >
+            <q-input
+              v-model="scope.value"
+              dense
+              autofocus
+              @keyup.enter="scope.set"
+              type="tel"
+            />
+          </q-popup-edit>
+        </td>
+        <td class="text-right">
+          <span v-if="item.price">
+            {{ formatCurrency(item.price) }}
+          </span>
+          <q-popup-edit
+            :disable="!!receipt"
+            :title="'Price'"
+            :validate="validateNumber"
+            auto-save
+            v-model="item.price"
+            v-slot="scope"
+          >
+            <q-input
+              v-model="scope.value"
+              dense
+              autofocus
+              @keyup.enter="scope.set"
+              type="tel"
+            />
+          </q-popup-edit>
+        </td>
+        <td class="text-right">
+          <span v-if="item.quantity * item.price">
+            {{ formatCurrency(item.quantity * item.price) }}
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="5" class="text-center">
+          <q-btn
+            v-if="!receipt"
+            icon="add"
+            dense
+            flat
+            color="primary"
+            @click="$emit('addRow')"
+          />
+        </td>
+      </tr>
+    </tbody>
+  </q-markup-table>
+</template>
+
+<script setup>
+import useApp from "src/composables/app";
+import useUtility from "src/composables/utility";
+
+defineProps({
+  items: {
+    type: Array,
+    required: true,
+  },
+  receipt: {
+    required: true,
+  },
+});
+
+defineEmits(["addRow"]);
+
+const { validateNumber } = useApp();
+const { formatCurrency } = useUtility();
+</script>
+
+<style scoped lang="scss">
+table {
+  position: relative;
+}
+
+thead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: rgba($color: #000000, $alpha: 0.7);
+  color: white;
+}
+</style>
