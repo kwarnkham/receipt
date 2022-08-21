@@ -36,16 +36,25 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
+    <q-drawer
+      v-model="leftDrawerOpen"
+      show-if-above
+      bordered
+      v-if="userStore.getUser"
+    >
       <q-list>
-        <q-item
-          v-for="link in links"
-          :key="link.name"
-          :to="{ name: link.name }"
-          exact-active-class="bg-primary text-white"
-          exact
-        >
-          <q-item-section> {{ link.meta.label }} </q-item-section>
+        <template v-for="link in links" :key="link.name">
+          <q-item
+            :to="{ name: link.name }"
+            exact-active-class="bg-primary text-white"
+            exact
+            v-if="link.name != 'users' || isAdmin(userStore.getUser)"
+          >
+            <q-item-section> {{ link.meta.label }} </q-item-section>
+          </q-item>
+        </template>
+        <q-item clickable @click="logout">
+          <q-item-section> Logout </q-item-section>
         </q-item>
       </q-list>
     </q-drawer>
@@ -60,10 +69,23 @@
 import { computed, ref } from "vue";
 import routes from "src/router/routes";
 import { useUserStore } from "src/stores/user";
+import useApp from "src/composables/app";
+import { useQuasar } from "quasar";
+import { api } from "src/boot/axios";
+import { useRouter } from "vue-router";
 const { children } = routes[0];
+const { isAdmin } = useApp();
 const leftDrawerOpen = ref(false);
 const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value;
+};
+const { localStorage } = useQuasar();
+const router = useRouter();
+const logout = () => {
+  localStorage.remove("token");
+  userStore.setUser(null);
+  api.defaults.headers.common["Authorization"] = undefined;
+  router.replace({ name: "login" });
 };
 const userStore = useUserStore();
 const links = computed(() =>

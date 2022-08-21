@@ -1,6 +1,14 @@
 <template>
   <div>
-    <div class="logo"></div>
+    <div
+      class="logo"
+      :style="{
+        backgroundImage:
+          'url(' +
+          getImage(userStore.getUser.pictures.find((e) => e.type == 1)?.name) +
+          ')',
+      }"
+    ></div>
     <div class="text-center">09-1231231, 09-1232132</div>
   </div>
 
@@ -59,12 +67,16 @@
 import { onBeforeMount, onMounted, ref } from "vue";
 import { date } from "quasar";
 import { emitter } from "src/boot/eventEmitter";
+import useApp from "src/composables/app";
+import { useUserStore } from "src/stores/user";
 const { formatDate } = date;
 defineProps({
   receipt: {
     required: true,
   },
 });
+const { getImage } = useApp();
+const userStore = useUserStore();
 const name = ref("");
 const mobile = ref("");
 const address = ref("");
@@ -101,9 +113,9 @@ onBeforeMount(() => {
 .logo {
   height: 120px;
   // background-image: url("https://spaces.madewithheart.tech/UKM/assets/home-logo.png");
-  // background-size: contain;
-  // background-repeat: no-repeat;
-  // background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 .bigger-font {
   font-size: 1.1em;
