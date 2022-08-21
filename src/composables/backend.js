@@ -20,6 +20,17 @@ export default function useBackend() {
         handleResponse(error);
       }
     },
+    updateUserInfo: async (data) => {
+      try {
+        return await api({
+          method: "PUT",
+          url: "user/" + data.user_id,
+          data,
+        }).then(({ data }) => data);
+      } catch (error) {
+        handleResponse(error);
+      }
+    },
     login: async (data) => {
       try {
         return await api({

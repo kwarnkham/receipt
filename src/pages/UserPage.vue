@@ -1,7 +1,7 @@
 <template>
   <q-page padding v-if="user" class="q-gutter-y-sm">
-    <div>Name : {{ user.name }}</div>
-    <div>Mobile: {{ user.mobile }}</div>
+    <div @click="changeUserInfo('name')">Name : {{ user.name }}</div>
+    <div @click="changeUserInfo('mobile')">Mobile: {{ user.mobile }}</div>
 
     <q-img :src="getImage(logoPicture?.name)" alt="logo">
       <div class="absolute-bottom">Logo</div>
@@ -100,15 +100,36 @@ import PicturesSelector from "src/components/PicturesSelector.vue";
 import useApp from "src/composables/app";
 
 const user = ref(null);
-const { findUser, createPicture } = useBackend();
+const { findUser, createPicture, updateUserInfo } = useBackend();
 const route = useRoute();
-const { loading } = useQuasar();
+const { loading, dialog } = useQuasar();
 const { getImage } = useApp();
 const logo = ref([]);
 const background = ref([]);
 const logoPicture = computed(() =>
   user.value?.pictures.find((e) => e.type == 1)
 );
+
+const changeUserInfo = (field) => {
+  dialog({
+    title: "Change " + field,
+    prompt: {
+      model: user.value[field],
+    },
+  }).onOk((value) => {
+    loading.show();
+    const data = JSON.parse(JSON.stringify(user.value));
+    data.user_id = data.id;
+    data[field] = value;
+    updateUserInfo(data)
+      .then((data) => {
+        user.value = data;
+      })
+      .finally(() => {
+        loading.hide();
+      });
+  });
+};
 
 const savePicture = (type) => {
   if (![1, 2].includes(type)) return;
