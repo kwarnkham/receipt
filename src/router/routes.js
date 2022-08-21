@@ -43,6 +43,26 @@ const routes = [
         name: "receipts",
         meta: {
           label: "Receipts",
+          requireAuth: true,
+        },
+      },
+      {
+        path: "users",
+        component: () => import("pages/UsersPage.vue"),
+        name: "users",
+        meta: {
+          label: "Users",
+          admin: true,
+          requireAuth: true,
+        },
+      },
+      {
+        path: "user/:id",
+        component: () => import("pages/UserPage.vue"),
+        name: "user",
+        meta: {
+          admin: true,
+          requireAuth: true,
         },
       },
     ],

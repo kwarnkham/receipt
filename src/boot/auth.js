@@ -13,7 +13,7 @@ export default boot(async ({ router }) => {
     try {
       user = await api({
         method: "GET",
-        url: "user",
+        url: "token",
       }).then(({ data }) => {
         userStore.setUser(data);
       });

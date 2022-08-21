@@ -31,7 +31,10 @@ export default function useApp() {
       api.defaults.headers.common["Authorization"] = "Bearer " + token;
       userStore.setUser(user);
     },
-    getImage: (name) => process.env.ASSET_URL + name,
+    getImage: (name) => {
+      if (!name) return;
+      return process.env.ASSET_URL + name;
+    },
     parseOrderStatus: (status) => {
       status = Number(status);
       switch (status) {
