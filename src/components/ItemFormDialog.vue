@@ -20,13 +20,14 @@
       </q-card-section>
 
       <q-card-actions align="right">
+        <q-btn color="info" label="Clear" @click="clearData" />
+        <q-btn color="primary" label="Cancel" @click="onDialogCancel" />
         <q-btn
           color="primary"
           label="OK"
           @click="onOKClick"
           :disabled="!filled"
         />
-        <q-btn color="primary" label="Cancel" @click="onDialogCancel" />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -59,6 +60,15 @@ const suggestedItems = computed(() => {
     e.name.toLowerCase().includes(name.value.toLowerCase())
   );
 });
+
+const clearData = () => {
+  onDialogOK({
+    key: props.item.key,
+    price: "",
+    quantity: "",
+    name: "",
+  });
+};
 
 const fillItem = (item) => {
   name.value = item.name;
