@@ -1,18 +1,18 @@
 <template>
   <q-page padding v-if="page" :style-fn="pageOptions" class="column">
     <q-form @submit.prevent="submit" class="q-mb-sm">
-      <q-input dense :label="'Name'" v-model="name">
+      <q-input dense :label="'Name'" v-model="params.customer_name">
         <template v-slot:before>
           <q-icon name="person" />
         </template>
       </q-input>
-      <q-input dense :label="'Phone'" v-model="mobile">
+      <q-input dense :label="'Phone'" v-model="params.customer_phone">
         <template v-slot:before> <q-icon name="phone" /> </template>
       </q-input>
       <q-input
         dense
         :label="'Date'"
-        v-model="date"
+        v-model="params.date"
         type="date"
         @click="chooseDate"
       >
@@ -20,14 +20,14 @@
           <q-icon name="calendar_month" />
         </template>
       </q-input>
-      <q-input dense :label="'Code'" v-model="code">
+      <q-input dense :label="'Code'" v-model="params.code">
         <template v-slot:before> <q-icon name="receipt" /> </template>
       </q-input>
       <div class="text-center">
         <q-btn icon="search" type="submit" flat />
       </div>
     </q-form>
-    <q-list class="col scroll-y">
+    <q-list class="col scroll-y" v-scroll="debounce(fetchMore, 300)">
       <q-item
         v-for="receipt in page.data"
         :key="receipt.id"
@@ -56,30 +56,32 @@
 import useReceiptList from "src/composables/receiptList";
 import useUtility from "src/composables/utility";
 import { ref } from "vue";
+import { debounce } from "quasar";
 
 const { pageOptions } = useUtility();
-const { page, fetchReceipts } = useReceiptList({
+const params = ref({
+  cutomer_name: "",
+  date: "",
+  customer_phone: "",
+  code: "",
   per_page: 20,
   order_in: "desc",
 });
-const name = ref("");
-const date = ref("");
-const mobile = ref("");
-const code = ref("");
+const { page, fetchReceipts, fetchAppend } = useReceiptList(params.value);
 
 const submit = () => {
-  fetchReceipts({
-    customer_name: name.value,
-    customer_phone: mobile.value,
-    date: date.value,
-    code: code.value,
-    per_page: 20,
-    order_in: "desc",
-  }).then((data) => {
+  fetchReceipts(params.value).then((data) => {
     page.value = data;
   });
 };
 const chooseDate = (e) => {
   e.target.showPicker();
+};
+
+const fetchMore = (verticalScrollPosition) => {
+  const el = document.querySelector(".scroll-y");
+  if (el.scrollHeight - 100 <= verticalScrollPosition + el.clientHeight) {
+    fetchAppend(params.value);
+  }
 };
 </script>
