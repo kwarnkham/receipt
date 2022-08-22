@@ -4,7 +4,7 @@ import useUtility from "./utility";
 
 export default function useBackend() {
   const handleResponse = useHandleResponse();
-  const { buildForm } = useUtility();
+  const { buildForm, removeFalsyProperty } = useUtility();
   return {
     createPicture: async (data) => {
       try {
@@ -47,7 +47,7 @@ export default function useBackend() {
         return await api({
           method: "GET",
           url: "user",
-          params,
+          params: removeFalsyProperty(params),
         }).then(({ data }) => data);
       } catch (error) {
         handleResponse(error);
@@ -87,15 +87,11 @@ export default function useBackend() {
       }
     },
     fetchReceipts: async (params) => {
-      const keys = Object.keys(params);
-      keys.forEach((key) => {
-        if (!params[key]) params[key] = undefined;
-      });
       try {
         return await api({
           method: "GET",
           url: "receipt",
-          params,
+          params: removeFalsyProperty(params),
         }).then(({ data }) => data);
       } catch (error) {
         handleResponse(error);

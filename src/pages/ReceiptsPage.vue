@@ -9,13 +9,7 @@
       <q-input dense :label="'Phone'" v-model="params.customer_phone">
         <template v-slot:before> <q-icon name="phone" /> </template>
       </q-input>
-      <q-input
-        dense
-        :label="'Date'"
-        v-model="params.date"
-        type="date"
-        @click="chooseDate"
-      >
+      <q-input dense v-model="params.date" type="date" @click="chooseDate">
         <template v-slot:before>
           <q-icon name="calendar_month" />
         </template>

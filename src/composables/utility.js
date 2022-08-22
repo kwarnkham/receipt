@@ -2,6 +2,13 @@ import { copyToClipboard, Notify } from "quasar";
 
 export default function useUtility() {
   return {
+    removeFalsyProperty: (object) => {
+      const keys = Object.keys(object);
+      keys.forEach((key) => {
+        if (!object[key]) object[key] = undefined;
+      });
+      return object;
+    },
     readPicture: (file) => {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
