@@ -1,8 +1,8 @@
 <template>
-  <q-page padding>
+  <q-page padding v-if="page">
     <q-list>
       <q-item
-        v-for="receipt in receipts"
+        v-for="receipt in page.data"
         :key="receipt.id"
         :to="{
           name: 'receipt',
@@ -26,20 +26,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
-import useBackend from "src/composables/backend";
-import { useQuasar } from "quasar";
-const { fetchReceipts } = useBackend();
-const receipts = ref([]);
-const { loading } = useQuasar();
-onMounted(() => {
-  loading.show();
-  fetchReceipts()
-    .then((data) => {
-      receipts.value = data.data;
-    })
-    .finally(() => {
-      loading.hide();
-    });
-});
+import useReceiptList from "src/composables/receiptList";
+
+const { page } = useReceiptList({ per_page: 20, order_in: "desc" });
 </script>
