@@ -1,12 +1,9 @@
 import { watch } from "vue";
 import useResponsePagination from "src/composables/responsePagination";
-import useBackend from "./backend";
 
-export default function useReceiptList(params) {
-  const { fetchReceipts } = useBackend();
-
+export default function useModelList(fetcher, params) {
   const { page, currentPage, fetchPage, fetchAppend } =
-    useResponsePagination(fetchReceipts);
+    useResponsePagination(fetcher);
 
   //where it starts
   watch(currentPage, () => {
@@ -14,7 +11,6 @@ export default function useReceiptList(params) {
   });
 
   return {
-    fetchReceipts,
     fetchAppend,
     page,
   };

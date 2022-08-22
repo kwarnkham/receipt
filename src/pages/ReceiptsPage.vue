@@ -53,10 +53,11 @@
 </template>
 
 <script setup>
-import useReceiptList from "src/composables/receiptList";
+import useModelList from "src/composables/modelList";
 import useUtility from "src/composables/utility";
 import { ref } from "vue";
 import { debounce } from "quasar";
+import useBackend from "src/composables/backend";
 
 const { pageOptions } = useUtility();
 const params = ref({
@@ -67,7 +68,8 @@ const params = ref({
   per_page: 20,
   order_in: "desc",
 });
-const { page, fetchReceipts, fetchAppend } = useReceiptList(params.value);
+const { fetchReceipts } = useBackend();
+const { page, fetchAppend } = useModelList(fetchReceipts, params.value);
 
 const submit = () => {
   fetchReceipts(params.value).then((data) => {
