@@ -112,9 +112,10 @@ thead {
   color: white;
 }
 .body {
-  background-position: center;
-  background-size: contain;
+  background-size: 91%;
   background-repeat: no-repeat;
-  background-attachment: fixed;
+  background-attachment: scroll;
+  background-position-x: center;
+  background-position-y: 48px;
 }
 </style>

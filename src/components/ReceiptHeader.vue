@@ -9,12 +9,11 @@
           ')',
       }"
     ></div>
-    <div class="text-center">09-1231231, 09-1232132</div>
   </div>
 
-  <div class="bigger-font row info">
+  <div class="row info text-subtitle1">
     <div class="col-7 row items-center">
-      <div class="header-label">Name:</div>
+      <div>Name:</div>
       <input
         v-model="name"
         dense
@@ -48,16 +47,16 @@
         color="primary"
         @click="explainVoucherNumber"
       />
-      <span v-else class="text-weight-bold">{{ receipt.code }}</span>
+      <span v-else>{{ receipt.code }}</span>
     </div>
-    <div class="col-5 row items-center">
+    <div class="col-5 row items-center text-subtitle1">
       <div>Phone:</div>
       <input v-model="mobile" class="col" required type="tel" v-if="!receipt" />
       <div v-else>{{ receipt.customer_phone }}</div>
     </div>
   </div>
-  <div class="row items-center info">
-    <div class="header-label">Address:</div>
+  <div class="row items-center info text-subtitle1">
+    <div>Address:</div>
     <input v-model="address" dense class="col" v-if="!receipt" />
     <div v-else>{{ receipt.customer_address }}</div>
   </div>
@@ -116,12 +115,5 @@ onBeforeMount(() => {
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-}
-.bigger-font {
-  font-size: 1.1em;
-}
-
-.header-label {
-  width: 60px;
 }
 </style>

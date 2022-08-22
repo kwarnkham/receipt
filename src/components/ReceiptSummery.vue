@@ -8,17 +8,17 @@
       </div>
     </div>
 
-    <div class="col bigger-font-2">
+    <div class="col text-subtitle1">
       <div class="row">
         <div class="col row items-center">
           <div class="footer-label">Total:</div>
-          <div class="text-right col">{{ formatCurrency(total) }}</div>
+          <div class="text-right col outline">{{ formatCurrency(total) }}</div>
         </div>
       </div>
       <div class="row">
         <div class="col row items-center">
           <div class="footer-label">Deposit:</div>
-          <div class="text-right col">
+          <div class="text-right col outline">
             {{ formatCurrency(receipt ? receipt.deposit : deposit) }}
           </div>
           <q-popup-edit
@@ -42,7 +42,7 @@
       <div class="row">
         <div class="col row items-center">
           <div class="footer-label">Discount:</div>
-          <div class="text-right col">
+          <div class="text-right col outline">
             {{ formatCurrency(receipt ? receipt.discount : discount) }}
           </div>
           <q-popup-edit
@@ -66,7 +66,7 @@
       <div class="row text-weight-bolder">
         <div class="col row items-center">
           <div class="footer-label">Grand total:</div>
-          <div class="col text-right">
+          <div class="col text-right outline">
             {{ formatCurrency(grandTotal) }}
           </div>
         </div>
@@ -119,10 +119,12 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped lang="scss">
-.bigger-font-2 {
-  font-size: 1.2em;
-}
 .footer-label {
   width: 90px;
+}
+.outline {
+  border: 1px solid black;
+  border-radius: 10px;
+  padding-right: 4px;
 }
 </style>

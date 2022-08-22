@@ -36,7 +36,7 @@ onMounted(() => {
   loading.show();
   fetchReceipts()
     .then((data) => {
-      receipts.value = data;
+      receipts.value = data.data;
     })
     .finally(() => {
       loading.hide();
