@@ -13,5 +13,11 @@ export default function useModelList(fetcher, params) {
   return {
     fetchAppend,
     page,
+    fetchMore: (verticalScrollPosition) => {
+      const el = document.querySelector(".scroll-y");
+      if (el.scrollHeight - 100 <= verticalScrollPosition + el.clientHeight) {
+        fetchAppend(params);
+      }
+    },
   };
 }

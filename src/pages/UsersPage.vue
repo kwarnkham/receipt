@@ -1,8 +1,8 @@
 <template>
-  <q-page padding>
-    <q-list>
+  <q-page padding v-if="page" :style-fn="pageOptions" class="column">
+    <q-list class="col scroll-y" v-scroll="debounce(fetchMore, 300)">
       <q-item
-        v-for="user in users"
+        v-for="user in page.data"
         :key="user"
         :to="{
           name: 'user',
@@ -20,20 +20,15 @@
 </template>
 
 <script setup>
-import { useQuasar } from "quasar";
+import { debounce } from "quasar";
 import useBackend from "src/composables/backend";
-import { onMounted, ref } from "vue";
-const users = ref([]);
+import useModelList from "src/composables/modelList";
+import useUtility from "src/composables/utility";
+
 const { fetchUsers } = useBackend();
-const { loading } = useQuasar();
-onMounted(() => {
-  loading.show();
-  fetchUsers({ role: "user" })
-    .then((data) => {
-      users.value = data.data;
-    })
-    .finally(() => {
-      loading.hide();
-    });
+const { pageOptions } = useUtility();
+const { page, fetchMore } = useModelList(fetchUsers, {
+  role: "user",
+  per_page: 40,
 });
 </script>

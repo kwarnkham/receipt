@@ -56,7 +56,7 @@
 import useModelList from "src/composables/modelList";
 import useUtility from "src/composables/utility";
 import { ref } from "vue";
-import { debounce } from "quasar";
+import { debounce, useQuasar } from "quasar";
 import useBackend from "src/composables/backend";
 
 const { pageOptions } = useUtility();
@@ -68,22 +68,21 @@ const params = ref({
   per_page: 20,
   order_in: "desc",
 });
+const { loading } = useQuasar();
 const { fetchReceipts } = useBackend();
-const { page, fetchAppend } = useModelList(fetchReceipts, params.value);
+const { page, fetchMore } = useModelList(fetchReceipts, params.value);
 
 const submit = () => {
-  fetchReceipts(params.value).then((data) => {
-    page.value = data;
-  });
+  loading.show();
+  fetchReceipts(params.value)
+    .then((data) => {
+      page.value = data;
+    })
+    .finally(() => {
+      loading.hide();
+    });
 };
 const chooseDate = (e) => {
   e.target.showPicker();
-};
-
-const fetchMore = (verticalScrollPosition) => {
-  const el = document.querySelector(".scroll-y");
-  if (el.scrollHeight - 100 <= verticalScrollPosition + el.clientHeight) {
-    fetchAppend(params.value);
-  }
 };
 </script>
