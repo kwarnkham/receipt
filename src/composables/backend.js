@@ -87,6 +87,10 @@ export default function useBackend() {
       }
     },
     fetchReceipts: async (params) => {
+      const keys = Object.keys(params);
+      keys.forEach((key) => {
+        if (!params[key]) params[key] = undefined;
+      });
       try {
         return await api({
           method: "GET",
