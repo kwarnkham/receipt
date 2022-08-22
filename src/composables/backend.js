@@ -31,6 +31,49 @@ export default function useBackend() {
         handleResponse(error);
       }
     },
+    addPayment: async (data) => {
+      try {
+        return await api({
+          method: "POST",
+          url: "user/payment",
+          data: removeFalsyProperty(data),
+        }).then(({ data }) => data);
+      } catch (error) {
+        handleResponse(error);
+      }
+    },
+    deleteUserPaymentInfo: async (data) => {
+      try {
+        return await api({
+          method: "DELETE",
+          url: `user/${data.user_id}/payment/${data.payment_id}/number/${data.number}`,
+        }).then(({ data }) => data);
+      } catch (error) {
+        handleResponse(error);
+      }
+    },
+    updateUserPaymentInfo: async (data) => {
+      try {
+        return await api({
+          method: "PUT",
+          url: `user/${data.user_id}/payment/${data.payment_id}/number/${data.old_number}`,
+          data: data,
+        }).then(({ data }) => data);
+      } catch (error) {
+        handleResponse(error);
+      }
+    },
+    fetchPayments: async (params) => {
+      try {
+        return await api({
+          method: "GET",
+          url: "payment",
+          params,
+        }).then(({ data }) => data);
+      } catch (error) {
+        handleResponse(error);
+      }
+    },
     login: async (data) => {
       try {
         return await api({
