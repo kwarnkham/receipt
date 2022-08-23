@@ -6,18 +6,21 @@
         type="password"
         required
         :label="'Old Password'"
+        autocomplete="current-password"
       />
       <q-input
         v-model="newPassword"
         type="password"
         required
         :label="'New Password'"
+        autocomplete="new-password"
       />
       <q-input
         v-model="newPasswordConfirmation"
         type="password"
         required
         :label="'New Password Again'"
+        autocomplete="new-password"
       />
       <div class="text-center">
         <q-btn type="sumit" icon="save" />
