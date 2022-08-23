@@ -2,9 +2,33 @@
   <div class="row">
     <div class="q-px-md flex flex-center">
       <div>
-        <div>Payment Info</div>
-        <div>09-213123213</div>
-        <div>09-123231231</div>
+        <div
+          v-for="payment in userStore.getUser?.payments"
+          :key="payment.pivot.id"
+          class="row items-center"
+        >
+          <div>
+            <q-icon
+              size="md"
+              :name="
+                'img:' +
+                getImage(
+                  'assets/' +
+                    (payment.type == 1 ? 'kpay-logo' : 'wavepay-logo') +
+                    '.png'
+                )
+              "
+            />
+          </div>
+          <div>
+            <strong>
+              {{ payment.pivot.number }}
+            </strong>
+            <div v-if="payment.pivot.account_name">
+              {{ payment.pivot.account_name }}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -73,13 +97,14 @@
       </div>
     </div>
   </div>
-  <div class="text-center text-overline">Thank You</div>
+  <div class="text-center text-caption text-italic">Thank You</div>
 </template>
 
 <script setup>
 import { emitter } from "src/boot/eventEmitter";
 import useApp from "src/composables/app";
 import useUtility from "src/composables/utility";
+import { useUserStore } from "src/stores/user";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 
 const props = defineProps({
@@ -91,10 +116,12 @@ const props = defineProps({
     required: true,
   },
 });
+
 const { formatCurrency } = useUtility();
-const { validateNumber } = useApp();
+const { validateNumber, getImage } = useApp();
 const discount = ref("");
 const deposit = ref("");
+const userStore = useUserStore();
 const total = computed(() =>
   props.items.reduce((carry, item) => carry + item.price * item.quantity, 0)
 );

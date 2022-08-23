@@ -162,7 +162,11 @@ const addPaymentToUser = () => {
     number: number.value,
   })
     .then((data) => {
-      if (data) user.value = data;
+      if (data) {
+        accountName.value = "";
+        number.value = "";
+        user.value = data;
+      }
     })
     .finally(() => {
       loading.hide();
