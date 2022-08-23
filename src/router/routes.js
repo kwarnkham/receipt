@@ -65,6 +65,15 @@ const routes = [
           requireAuth: true,
         },
       },
+      {
+        path: "change-password",
+        component: () => import("pages/ChangePasswordPage.vue"),
+        name: "changePassword",
+        meta: {
+          requireAuth: true,
+          label: "Change Password",
+        },
+      },
     ],
   },
 

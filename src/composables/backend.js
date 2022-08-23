@@ -53,6 +53,17 @@ export default function useBackend() {
         handleResponse(error);
       }
     },
+    changePassword: async (data) => {
+      try {
+        return await api({
+          method: "POST",
+          url: "password",
+          data: removeFalsyProperty(data),
+        }).then(({ data }) => data);
+      } catch (error) {
+        handleResponse(error);
+      }
+    },
     deleteUserPaymentInfo: async (data) => {
       try {
         return await api({

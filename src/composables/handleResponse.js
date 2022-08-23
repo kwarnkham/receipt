@@ -14,6 +14,10 @@ export default function useHandleResponse() {
       errorNotify(message);
     } else if (e.response?.status == 401) {
       errorNotify("Mobile and password doesn't match");
+    } else if (e.response?.status == 403) {
+      errorNotify(
+        "Invalid password or you are not allowed to perform the action"
+      );
     } else {
       if (e.response) errorNotify(e.response.data.message || defaultMessage);
       else errorNotify(e.message);
