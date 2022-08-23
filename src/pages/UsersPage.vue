@@ -7,11 +7,17 @@
           <q-icon name="phone" />
         </template>
       </q-input>
-      <div class="text-center">
+      <div class="row justify-around">
+        <q-btn icon="add" flat @click="showAddUserForm" />
         <q-btn icon="search" flat type="submit" />
       </div>
     </q-form>
-    <q-list class="col scroll-y" v-scroll="debounce(fetchMore, 300)">
+    <q-list
+      class="col scroll-y"
+      v-scroll="debounce(fetchMore, 300)"
+      separator
+      bordered
+    >
       <q-item
         v-for="user in page.data"
         :key="user"
@@ -32,14 +38,17 @@
 
 <script setup>
 import { debounce, useQuasar } from "quasar";
+import AddUserFormDialog from "src/components/AddUserFormDialog";
 import useBackend from "src/composables/backend";
 import useModelList from "src/composables/modelList";
 import useUtility from "src/composables/utility";
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 
-const { fetchUsers } = useBackend();
-const { loading } = useQuasar();
+const { fetchUsers, createUser } = useBackend();
+const { loading, dialog } = useQuasar();
 const { pageOptions } = useUtility();
+const router = useRouter();
 const params = ref({
   role: "user",
   per_page: 40,
@@ -57,5 +66,26 @@ const submit = () => {
     .finally(() => {
       loading.hide();
     });
+};
+
+const showAddUserForm = () => {
+  dialog({
+    component: AddUserFormDialog,
+  }).onOk((data) => {
+    loading.show();
+    createUser(data)
+      .then((data) => {
+        if (data)
+          router.push({
+            name: "user",
+            params: {
+              id: data.id,
+            },
+          });
+      })
+      .finally(() => {
+        loading.hide();
+      });
+  });
 };
 </script>

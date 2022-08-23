@@ -42,6 +42,17 @@ export default function useBackend() {
         handleResponse(error);
       }
     },
+    createUser: async (data) => {
+      try {
+        return await api({
+          method: "POST",
+          url: "user",
+          data: removeFalsyProperty(data),
+        }).then(({ data }) => data);
+      } catch (error) {
+        handleResponse(error);
+      }
+    },
     deleteUserPaymentInfo: async (data) => {
       try {
         return await api({
