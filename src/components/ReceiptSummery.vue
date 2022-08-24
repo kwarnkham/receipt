@@ -1,6 +1,6 @@
 <template>
-  <div class="row">
-    <div class="column justify-center q-gutter-y-xs q-pr-xs">
+  <div class="row full-width summery">
+    <div class="column justify-center q-gutter-y-xs q-pr-xs col-5">
       <div
         v-for="payment in userStore.getUser?.payments"
         :key="payment.pivot.id"
@@ -31,16 +31,16 @@
     </div>
 
     <div class="col text-caption bg-white">
-      <div class="row">
+      <div class="row text-right">
         <div class="col row items-center">
           <div class="footer-label">Total:</div>
-          <div class="text-right col outline">{{ formatCurrency(total) }}</div>
+          <div class="col outline">{{ formatCurrency(total) }}</div>
         </div>
       </div>
-      <div class="row">
+      <div class="row text-right">
         <div class="col row items-center">
           <div class="footer-label">Deposit:</div>
-          <div class="text-right col outline">
+          <div class="col outline">
             {{ formatCurrency(receipt ? receipt.deposit : deposit) }}
           </div>
           <q-popup-edit
@@ -61,10 +61,10 @@
           </q-popup-edit>
         </div>
       </div>
-      <div class="row">
+      <div class="row text-right">
         <div class="col row items-center">
           <div class="footer-label">Discount:</div>
-          <div class="text-right col outline">
+          <div class="col outline">
             {{ formatCurrency(receipt ? receipt.discount : discount) }}
           </div>
           <q-popup-edit
@@ -85,10 +85,10 @@
           </q-popup-edit>
         </div>
       </div>
-      <div class="row text-weight-bolder text-body2">
+      <div class="row text-right text-weight-bolder text-body2">
         <div class="col row items-center">
           <div class="footer-label">Grand total:</div>
-          <div class="col text-right outline">
+          <div class="col outline">
             {{ formatCurrency(grandTotal) }}
           </div>
         </div>
@@ -153,5 +153,8 @@ onBeforeUnmount(() => {
 }
 .payment-text {
   font-size: 11px;
+}
+.summery {
+  height: 100px;
 }
 </style>

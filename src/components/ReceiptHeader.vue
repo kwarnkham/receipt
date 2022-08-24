@@ -1,5 +1,5 @@
 <template>
-  <div class="row info text-caption items-center">
+  <div class="row info text-caption items-center border-bot-dot">
     <div class="col-7 row items-center">
       <q-icon name="person" size="xs" />
       <input
@@ -7,12 +7,32 @@
         dense
         required
         type="text"
-        class="col q-mr-sm"
+        class="col"
         v-if="!receipt"
       />
       <div v-else class="text-weight-bold">
         {{ receipt.customer_name }}
       </div>
+    </div>
+    <div class="col-5 row items-center">
+      <q-icon name="receipt" size="xs" />
+      <q-btn
+        v-if="!receipt"
+        icon="info"
+        dense
+        flat
+        size="sm"
+        @click="explainVoucherNumber"
+      />
+      <span v-else style="font-size: 9px">{{ receipt.code }}</span>
+    </div>
+  </div>
+
+  <div class="row info text-caption items-center border-bot-dot">
+    <div class="col-7 row items-center">
+      <q-icon name="phone" size="xs" />
+      <input v-model="mobile" class="col" required type="tel" v-if="!receipt" />
+      <div v-else style="font-size: 13px">{{ receipt.customer_phone }}</div>
     </div>
     <div class="col-5 row items-center">
       <q-icon name="calendar_month" size="xs" />
@@ -28,26 +48,6 @@
       <div v-else>
         {{ formatDate(receipt.date, "DD-MM-YYYY") }}
       </div>
-    </div>
-  </div>
-
-  <div class="row info text-caption items-center">
-    <div class="col-7 row items-center">
-      <q-icon name="receipt" size="xs" />
-      <q-btn
-        v-if="!receipt"
-        icon="info"
-        dense
-        flat
-        size="sm"
-        @click="explainVoucherNumber"
-      />
-      <span v-else>{{ receipt.code }}</span>
-    </div>
-    <div class="col-5 row items-center">
-      <q-icon name="phone" size="xs" />
-      <input v-model="mobile" class="col" required type="tel" v-if="!receipt" />
-      <div v-else>{{ receipt.customer_phone }}</div>
     </div>
   </div>
   <div class="row items-center text-caption info">
@@ -121,5 +121,8 @@ input {
   font-size: 0.75rem;
   line-height: 1.25rem;
   letter-spacing: 0.03333em;
+}
+.border-bot-dot {
+  border-bottom: 1px solid black;
 }
 </style>
