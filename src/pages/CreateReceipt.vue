@@ -1,13 +1,32 @@
 <template>
-  <q-page :style-fn="pageOptions" class="column q-px-xs page">
-    <ReceiptHeader :receipt="receipt" ref="header" />
-    <ReceiptBody
-      :items="items"
-      @addRow="addRow"
-      :receipt="receipt"
-      @itemFilled="fillItem"
-    />
-    <ReceiptSummery :receipt="receipt" :items="items" ref="summery" />
+  <q-page :style-fn="pageOptions" class="column q-px-xs">
+    <div
+      class="background-image"
+      :style="{
+        backgroundImage:
+          'url(' +
+          getImage(userStore.getUser.pictures.find((e) => e.type == 1)?.name) +
+          ')',
+      }"
+    ></div>
+    <div
+      class="col column background-image"
+      :style="{
+        backgroundImage:
+          'url(' +
+          getImage(userStore.getUser.pictures.find((e) => e.type == 2)?.name) +
+          ')',
+      }"
+    >
+      <ReceiptHeader :receipt="receipt" ref="header" />
+      <ReceiptBody
+        :items="items"
+        @addRow="addRow"
+        :receipt="receipt"
+        @itemFilled="fillItem"
+      />
+      <ReceiptSummery :receipt="receipt" :items="items" ref="summery" />
+    </div>
   </q-page>
 </template>
 
@@ -27,7 +46,7 @@ import { useUserStore } from "src/stores/user";
 const { loading, localStorage } = useQuasar();
 const { pageOptions } = useUtility();
 const { createReceipt, findReceipt } = useBackend();
-const { errorNotify, successNotify } = useApp();
+const { errorNotify, successNotify, getImage } = useApp();
 const route = useRoute();
 const header = ref(null);
 const summery = ref(null);
@@ -98,7 +117,7 @@ const fillItem = (item) => {
 const receipt = ref(null);
 
 const items = ref(
-  [...Array(10).keys()].map((e) => ({
+  [...Array(20).keys()].map((e) => ({
     key: e + 1,
     name: "",
     quantity: "",
@@ -147,10 +166,10 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss" scoped>
-.page {
-  // background-image: url("https://spaces.madewithheart.tech/UKM/assets/home-background.jpg");
-  // background-size: cover;
-  // background-repeat: no-repeat;
-  // background-position: center;
+.background-image {
+  height: 120px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 </style>

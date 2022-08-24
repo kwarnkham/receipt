@@ -1,19 +1,7 @@
 <template>
-  <div>
-    <div
-      class="logo"
-      :style="{
-        backgroundImage:
-          'url(' +
-          getImage(userStore.getUser.pictures.find((e) => e.type == 1)?.name) +
-          ')',
-      }"
-    ></div>
-  </div>
-
-  <div class="row info text-subtitle1">
+  <div class="row info text-caption items-center">
     <div class="col-7 row items-center">
-      <q-icon name="person" size="xs" color="primary" />
+      <q-icon name="person" size="xs" />
       <input
         v-model="name"
         dense
@@ -22,47 +10,56 @@
         class="col q-mr-sm"
         v-if="!receipt"
       />
-      <div v-else>{{ receipt.customer_name }}</div>
+      <div v-else class="text-weight-bold">
+        {{ receipt.customer_name }}
+      </div>
     </div>
     <div class="col-5 row items-center">
+      <q-icon name="calendar_month" size="xs" />
       <input
         v-model="orderDate"
         type="date"
+        format="DD-MM-YYYY"
         required
         class="col"
+        @click="chooseDate"
         v-if="!receipt"
       />
-      <div v-else>{{ receipt.date }}</div>
+      <div v-else>
+        {{ formatDate(receipt.date, "DD-MM-YYYY") }}
+      </div>
     </div>
   </div>
-  <div class="row info">
+
+  <div class="row info text-caption items-center">
     <div class="col-7 row items-center">
-      <q-icon name="receipt" size="xs" color="primary" />
+      <q-icon name="receipt" size="xs" />
       <q-btn
         v-if="!receipt"
         icon="info"
         dense
         flat
-        color="primary"
+        size="sm"
         @click="explainVoucherNumber"
       />
       <span v-else>{{ receipt.code }}</span>
     </div>
-    <div class="col-5 row items-center text-subtitle1">
-      <q-icon name="phone" size="xs" color="green" />
+    <div class="col-5 row items-center">
+      <q-icon name="phone" size="xs" />
       <input v-model="mobile" class="col" required type="tel" v-if="!receipt" />
       <div v-else>{{ receipt.customer_phone }}</div>
     </div>
   </div>
-  <div class="row items-center text-subtitle1">
+  <div class="row items-center text-caption info">
     <template v-if="!receipt">
-      <q-icon name="apartment" size="xs" color="primary" />
+      <q-icon name="apartment" size="xs" />
       <input v-model="address" dense class="col" />
     </template>
     <div v-else>
-      <q-icon name="apartment" size="xs" color="primary" />{{
-        receipt.customer_address
-      }}
+      <q-icon name="apartment" size="xs" />
+      <span>
+        {{ receipt.customer_address }}
+      </span>
     </div>
   </div>
 </template>
@@ -71,16 +68,14 @@
 import { onBeforeMount, onMounted, ref } from "vue";
 import { date } from "quasar";
 import { emitter } from "src/boot/eventEmitter";
-import useApp from "src/composables/app";
-import { useUserStore } from "src/stores/user";
+
 const { formatDate } = date;
 defineProps({
   receipt: {
     required: true,
   },
 });
-const { getImage } = useApp();
-const userStore = useUserStore();
+
 const name = ref("");
 const mobile = ref("");
 const address = ref("");
@@ -102,6 +97,9 @@ const resetData = () => {
   address.value = "";
   orderDate.value = formatDate(Date.now(), "YYYY-MM-DD");
 };
+const chooseDate = (e) => {
+  e.target.showPicker();
+};
 onMounted(() => {
   emitter.on("addNewReceipt", resetData);
 });
@@ -111,15 +109,17 @@ onBeforeMount(() => {
 </script>
 
 <style scoped lang="scss">
+input {
+  height: 20px;
+}
 .info {
-  height: 28px;
+  height: 18px;
   margin-bottom: 5px;
 }
-.logo {
-  height: 120px;
-  // background-image: url("https://spaces.madewithheart.tech/UKM/assets/home-logo.png");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+
+.text {
+  font-size: 0.75rem;
+  line-height: 1.25rem;
+  letter-spacing: 0.03333em;
 }
 </style>

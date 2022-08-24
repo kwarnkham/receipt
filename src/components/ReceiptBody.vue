@@ -1,32 +1,24 @@
 <template>
-  <div
-    class="col body"
-    :style="{
-      backgroundImage:
-        'url(' +
-        getImage(userStore.getUser.pictures.find((e) => e.type == 2)?.name) +
-        ')',
-    }"
-  >
+  <div class="col">
     <q-markup-table
       class="fit bg-transparent"
       separator="cell"
       wrap-cells
-      bordered
       flat
+      dense
     >
       <thead>
         <tr>
-          <th class="text-left">#</th>
+          <th class="text-left number-column">No.</th>
           <th class="text-left">Name</th>
-          <th class="text-right">Quantity</th>
+          <th class="text-right">Qty</th>
           <th class="text-right">Price</th>
           <th class="text-right">Amount</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="item in items" :key="item.key" @click="fillItem(item)">
-          <td class="text-left">{{ item.key }}</td>
+          <td class="text-left number-column">{{ item.key }}</td>
 
           <td class="text-left">
             {{ item.name }}
@@ -46,10 +38,9 @@
             </span>
           </td>
         </tr>
-        <tr>
+        <tr v-if="!receipt">
           <td colspan="5" class="text-center">
             <q-btn
-              v-if="!receipt"
               icon="add"
               dense
               flat
@@ -67,8 +58,6 @@
 import { useQuasar } from "quasar";
 import useUtility from "src/composables/utility";
 import ItemFormDialog from "src/components/ItemFormDialog";
-import { useUserStore } from "src/stores/user";
-import useApp from "src/composables/app";
 
 const props = defineProps({
   items: {
@@ -84,8 +73,7 @@ const emit = defineEmits(["addRow", "itemFilled"]);
 
 const { formatCurrency } = useUtility();
 const { dialog } = useQuasar();
-const userStore = useUserStore();
-const { getImage } = useApp();
+
 const fillItem = (item) => {
   if (props.receipt) return;
   dialog({
@@ -100,6 +88,9 @@ const fillItem = (item) => {
 </script>
 
 <style scoped lang="scss">
+.q-markup-table {
+  border: 1px solid black;
+}
 table {
   position: relative;
 }
@@ -108,14 +99,17 @@ thead {
   position: sticky;
   top: 0;
   z-index: 10;
-  background-color: rgba($color: #000000, $alpha: 0.7);
+  background-color: rgba($color: #000000, $alpha: 1);
   color: white;
 }
-.body {
-  background-size: 91%;
-  background-repeat: no-repeat;
-  background-attachment: scroll;
-  background-position-x: center;
-  background-position-y: 48px;
+
+.number-column {
+  width: 1em;
+}
+tr {
+  td {
+    font-size: 11px !important;
+    border-color: black;
+  }
 }
 </style>

@@ -1,38 +1,36 @@
 <template>
   <div class="row">
-    <div class="q-px-md flex flex-center">
-      <div>
-        <div
-          v-for="payment in userStore.getUser?.payments"
-          :key="payment.pivot.id"
-          class="row items-center"
-        >
+    <div class="column justify-center q-gutter-y-xs q-pr-xs">
+      <div
+        v-for="payment in userStore.getUser?.payments"
+        :key="payment.pivot.id"
+        class="row items-center payment-text"
+      >
+        <div>
+          <q-icon
+            size="md"
+            :name="
+              'img:' +
+              getImage(
+                'assets/' +
+                  (payment.type == 1 ? 'kpay-logo' : 'wavepay-logo') +
+                  '.png'
+              )
+            "
+          />
+        </div>
+        <div :class="[payment.type == 1 ? 'kpay-color' : 'wavepay-color']">
+          <strong v-if="payment.pivot.account_name">
+            {{ payment.pivot.account_name }}
+          </strong>
           <div>
-            <q-icon
-              size="md"
-              :name="
-                'img:' +
-                getImage(
-                  'assets/' +
-                    (payment.type == 1 ? 'kpay-logo' : 'wavepay-logo') +
-                    '.png'
-                )
-              "
-            />
-          </div>
-          <div>
-            <strong>
-              {{ payment.pivot.number }}
-            </strong>
-            <div v-if="payment.pivot.account_name">
-              {{ payment.pivot.account_name }}
-            </div>
+            {{ payment.pivot.number }}
           </div>
         </div>
       </div>
     </div>
 
-    <div class="col text-subtitle1">
+    <div class="col text-caption bg-white">
       <div class="row">
         <div class="col row items-center">
           <div class="footer-label">Total:</div>
@@ -87,7 +85,7 @@
           </q-popup-edit>
         </div>
       </div>
-      <div class="row text-weight-bolder">
+      <div class="row text-weight-bolder text-body2">
         <div class="col row items-center">
           <div class="footer-label">Grand total:</div>
           <div class="col text-right outline">
@@ -97,7 +95,6 @@
       </div>
     </div>
   </div>
-  <div class="text-center text-caption text-italic">Thank You</div>
 </template>
 
 <script setup>
@@ -153,5 +150,8 @@ onBeforeUnmount(() => {
   border: 1px solid black;
   border-radius: 10px;
   padding-right: 4px;
+}
+.payment-text {
+  font-size: 11px;
 }
 </style>
