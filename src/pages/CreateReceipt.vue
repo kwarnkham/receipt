@@ -104,7 +104,7 @@ const submit = () => {
           )
         );
       }
-      successNotify("Success");
+      successNotify("Success", { timeout: 1000 });
     })
     .finally(() => {
       loading.hide();
@@ -138,6 +138,8 @@ const resetData = () => {
 };
 
 onMounted(() => {
+  successNotify("Success", { timeout: 500 });
+
   if (route.params.id) {
     loading.show();
     findReceipt(route.params.id)

@@ -111,6 +111,10 @@ onBeforeMount(() => {
 <style scoped lang="scss">
 input {
   height: 20px;
+  border: none;
+}
+input:focus {
+  outline: none;
 }
 .info {
   height: 18px;

@@ -20,10 +20,11 @@ export default function useApp() {
         type: "negative",
       });
     },
-    successNotify: (message) => {
+    successNotify: (message, options = {}) => {
       notify({
         message,
         type: "positive",
+        ...options,
       });
     },
     preserveToken: ({ user, token }) => {
