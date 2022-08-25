@@ -96,6 +96,26 @@ export default function useBackend() {
         handleResponse(error);
       }
     },
+    fetchKnownItems: async () => {
+      try {
+        return await api({
+          method: "GET",
+          url: "item/known",
+        }).then(({ data }) => data);
+      } catch (error) {
+        handleResponse(error);
+      }
+    },
+    fetchKnownUsers: async () => {
+      try {
+        return await api({
+          method: "GET",
+          url: "customer/known",
+        }).then(({ data }) => data);
+      } catch (error) {
+        handleResponse(error);
+      }
+    },
     login: async (data) => {
       try {
         return await api({

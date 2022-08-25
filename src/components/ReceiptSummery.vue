@@ -30,7 +30,7 @@
       </div>
     </div>
 
-    <div class="col text-caption bg-white">
+    <div class="col text-caption">
       <div class="row text-right">
         <div class="col row items-center">
           <div class="footer-label">Total:</div>
@@ -150,6 +150,7 @@ onBeforeUnmount(() => {
   border: 1px solid black;
   border-radius: 10px;
   padding-right: 4px;
+  background-color: white;
 }
 .payment-text {
   font-size: 11px;
