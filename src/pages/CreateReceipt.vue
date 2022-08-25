@@ -84,31 +84,64 @@ const submit = () => {
   })
     .then((data) => {
       receipt.value = data;
-      const knownItems =
-        localStorage.getItem(userStore.getUser.id + "knownItems") ?? [];
-
-      if (knownItems.length == 0)
-        localStorage.set(
-          userStore.getUser.id + "knownItems",
-          orderItems.value.map((e) => ({ name: e.name, price: e.price }))
-        );
-      else {
-        localStorage.set(
-          userStore.getUser.id + "knownItems",
-          [
-            ...orderItems.value.map((e) => ({ name: e.name, price: e.price })),
-            ...knownItems,
-          ].filter(
-            (value, index, self) =>
-              index === self.findIndex((e) => e.name === value.name)
-          )
-        );
-      }
-      successNotify("Success", { timeout: 1000 });
+      preserveItems();
+      preserveUsers();
+      successNotify("Success", { timeout: 500 });
     })
     .finally(() => {
       loading.hide();
     });
+};
+const preserveItems = () => {
+  const knownItems =
+    localStorage.getItem(userStore.getUser.id + "knownItems") ?? [];
+  if (knownItems.length == 0)
+    localStorage.set(
+      userStore.getUser.id + "knownItems",
+      orderItems.value.map((e) => ({ name: e.name, price: e.price }))
+    );
+  else {
+    localStorage.set(
+      userStore.getUser.id + "knownItems",
+      [
+        ...orderItems.value.map((e) => ({ name: e.name, price: e.price })),
+        ...knownItems,
+      ].filter(
+        (value, index, self) =>
+          index === self.findIndex((e) => e.name === value.name)
+      )
+    );
+  }
+};
+
+const preserveUsers = () => {
+  const knownUsers =
+    localStorage.getItem(userStore.getUser.id + "knownUsers") ?? [];
+
+  if (knownUsers.length == 0)
+    localStorage.set(userStore.getUser.id + "knownUsers", [
+      {
+        mobile: header.value.mobile,
+        name: header.value.name,
+        address: header.value.address,
+      },
+    ]);
+  else {
+    localStorage.set(
+      userStore.getUser.id + "knownUsers",
+      [
+        {
+          mobile: header.value.mobile,
+          name: header.value.name,
+          address: header.value.address,
+        },
+        ...knownUsers,
+      ].filter(
+        (value, index, self) =>
+          index === self.findIndex((e) => e.mobile === value.mobile)
+      )
+    );
+  }
 };
 const fillItem = (item) => {
   const index = items.value.findIndex((e) => e.key == item.key);
@@ -138,8 +171,6 @@ const resetData = () => {
 };
 
 onMounted(() => {
-  successNotify("Success", { timeout: 500 });
-
   if (route.params.id) {
     loading.show();
     findReceipt(route.params.id)

@@ -20,9 +20,10 @@
           v-if="$route.name != 'index'"
         />
         <q-toolbar-title>
-          <q-chip icon="phone" color="teal" text-color="white"
-            >09740813851</q-chip
-          >
+          <q-icon :name="'img:' + getImage('assets/icon.png')" size="md" />
+          <q-chip icon="phone" color="teal" text-color="white">
+            09740813851
+          </q-chip>
         </q-toolbar-title>
 
         <div>
@@ -78,7 +79,7 @@ import { useQuasar } from "quasar";
 import { api } from "src/boot/axios";
 import { useRouter } from "vue-router";
 const { children } = routes[0];
-const { isAdmin } = useApp();
+const { isAdmin, getImage } = useApp();
 const leftDrawerOpen = ref(false);
 const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value;
