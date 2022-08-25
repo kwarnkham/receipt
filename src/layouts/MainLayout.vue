@@ -19,7 +19,11 @@
           @click="$router.go(-1)"
           v-if="$route.name != 'index'"
         />
-        <q-toolbar-title> Quasar App </q-toolbar-title>
+        <q-toolbar-title>
+          <q-chip icon="phone" color="teal" text-color="white"
+            >09740813851</q-chip
+          >
+        </q-toolbar-title>
 
         <div>
           <q-btn
