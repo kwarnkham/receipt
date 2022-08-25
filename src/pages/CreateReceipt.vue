@@ -5,7 +5,7 @@
       :style="{
         backgroundImage:
           'url(' +
-          getImage(userStore.getUser.pictures.find((e) => e.type == 1)?.name) +
+          getImage(userStore.getUser?.pictures.find((e) => e.type == 1)?.name) +
           ')',
       }"
     ></div>
@@ -14,7 +14,7 @@
       :style="{
         backgroundImage:
           'url(' +
-          getImage(userStore.getUser.pictures.find((e) => e.type == 2)?.name) +
+          getImage(userStore.getUser?.pictures.find((e) => e.type == 2)?.name) +
           ')',
       }"
     >

@@ -1,8 +1,9 @@
 {
   "name": "receipt",
   "version": "0.0.1",
-  "description": "A Quasar Project",
-  "productName": "Ph Receipt",
+  "description": "Phone Voucher",
+  "productName": "Phone Voucher",
+  "productDescription": "Phone Voucher, easy receipt on your palm.",
   "author": "Moon <kwarnkham.moon@gmail.com>",
   "private": true,
   "scripts": {

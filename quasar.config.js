@@ -159,9 +159,9 @@ module.exports = configure(function (ctx) {
       },
 
       manifest: {
-        name: `Quasar App`,
-        short_name: `Quasar App`,
-        description: `A Quasar Project`,
+        name: `Phone Voucher`,
+        short_name: `PhV`,
+        description: `Phone Voucher, easy receipt on your palm.`,
         display: "standalone",
         orientation: "portrait",
         background_color: "#ffffff",
