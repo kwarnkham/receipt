@@ -60,7 +60,7 @@
       </div>
     </div>
   </div>
-  <div class="row items-center text-caption info">
+  <div class="row items-center text-caption">
     <template v-if="!receipt">
       <q-icon name="apartment" size="xs" />
       <input v-model="address" dense class="col" :disabled="!mobile" />
