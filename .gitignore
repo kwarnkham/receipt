@@ -6,6 +6,7 @@ node_modules
 deploy.md
 .env.*
 spa.zip
+todo.md
 
 # Quasar core related directories
 .quasar

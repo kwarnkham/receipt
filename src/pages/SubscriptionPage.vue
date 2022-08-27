@@ -9,7 +9,7 @@
           </strong>
         </div>
         <div>
-          Subscription will end on :
+          Subscription will end after :
           <strong>
             {{
               formatDate(
