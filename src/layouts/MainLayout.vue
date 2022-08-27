@@ -93,7 +93,7 @@ import { useQuasar } from "quasar";
 import { api } from "src/boot/axios";
 import { useRouter } from "vue-router";
 const { children } = routes[0];
-const { isAdmin, getImage } = useApp();
+const { isAdmin, getImage, callNumber } = useApp();
 const leftDrawerOpen = ref(false);
 const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value;
@@ -116,7 +116,4 @@ const links = computed(() =>
     else return e.meta.label;
   })
 );
-const callNumber = (number) => {
-  window.open("tel:" + number, "_self");
-};
 </script>

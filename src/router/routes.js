@@ -74,6 +74,15 @@ const routes = [
           label: "Change Password",
         },
       },
+      {
+        path: "subscription",
+        component: () => import("pages/SubscriptionPage.vue"),
+        name: "subscription",
+        meta: {
+          requireAuth: true,
+          label: "Subscription",
+        },
+      },
     ],
   },
 

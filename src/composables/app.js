@@ -3,7 +3,7 @@ import { api } from "src/boot/axios";
 import { useUserStore } from "src/stores/user";
 
 export default function useApp() {
-  const { notify, localStorage } = useQuasar();
+  const { notify, localStorage, platform } = useQuasar();
   const userStore = useUserStore();
 
   return {
@@ -66,6 +66,13 @@ export default function useApp() {
         case 3:
           return "paynow-logo.png";
       }
+    },
+    callNumber: (number) => {
+      window.open("tel:" + number, "_self");
+    },
+    contactFacebook: (id) => {
+      if (platform.is.ios) window.open("fb://profile/" + id);
+      else window.open("fb://page/" + id, "_self");
     },
   };
 }
