@@ -31,8 +31,8 @@ import { useRouter } from "vue-router";
 
 const mobile = ref("");
 const password = ref("");
-const { loading } = useQuasar();
-const { login } = useBackend();
+const { loading, localStorage } = useQuasar();
+const { login, fetchKnownItems, fetchKnownUsers } = useBackend();
 const { preserveToken } = useApp();
 const router = useRouter();
 const submit = () => {
@@ -44,6 +44,20 @@ const submit = () => {
     .then((data) => {
       if (data) {
         preserveToken(data);
+        const { user } = data;
+        const knownUsersKey = user.id + "knownUsers";
+        const knownItemsKey = user.id + "knownItems";
+        let knownUsers = localStorage.getItem(knownUsersKey);
+        let knownItems = localStorage.getItem(knownItemsKey);
+        if (!knownUsers)
+          fetchKnownUsers().then((data) =>
+            localStorage.set(knownUsersKey, data)
+          );
+
+        if (!knownItems)
+          fetchKnownItems().then((data) =>
+            localStorage.set(knownItemsKey, data)
+          );
         router.replace({ name: "index" });
       }
     })

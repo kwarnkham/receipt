@@ -20,7 +20,15 @@
           v-if="$route.name != 'index'"
         />
         <q-toolbar-title>
-          <q-icon :name="'img:' + getImage('assets/icon.png')" size="md" />
+          <q-icon
+            :name="'img:' + getImage('assets/icon.png')"
+            size="md"
+            @click="
+              $router.push({
+                name: 'index',
+              })
+            "
+          />
           <q-chip
             icon="phone"
             color="teal"
@@ -93,6 +101,9 @@ const toggleLeftDrawer = () => {
 const { localStorage } = useQuasar();
 const router = useRouter();
 const logout = () => {
+  const user = userStore.getUser;
+  localStorage.remove(user.id + "knownUsers");
+  localStorage.remove(user.id + "knownItems");
   localStorage.remove("token");
   userStore.setUser(null);
   api.defaults.headers.common["Authorization"] = undefined;
