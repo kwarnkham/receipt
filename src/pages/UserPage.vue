@@ -1,123 +1,181 @@
 <template>
   <q-page padding v-if="user" class="q-gutter-y-sm">
-    <div @click="changeUserInfo('name')">Name : {{ user.name }}</div>
-    <div @click="changeUserInfo('mobile')">Mobile: {{ user.mobile }}</div>
-    <q-form
-      @submit.prevent="addPaymentToUser"
-      class="q-pa-xs q-gutter-y-xs bg-light-blue-1 rounded-borders"
-    >
-      <q-select
-        :label="'Payments'"
-        v-model="selectedPayment"
-        :options="payments"
-        option-label="name"
-        option-value="id"
-      ></q-select>
-      <q-input v-model="accountName" dense :label="'Account Name'" />
-      <q-input v-model="number" required dense type="tel" :label="'Number'" />
-      <div class="text-center">
-        <q-btn icon="add" flat type="submit" />
-      </div>
-    </q-form>
-    <div>
+    <q-expansion-item expand-separator label="Subscription">
+      <q-form @submit.prevent="subscribe">
+        <q-input
+          :label="'months'"
+          v-model="monthDuration"
+          required
+          type="tel"
+        />
+        <q-input :label="'Monthly Price'" v-model="price" required type="tel" />
+        <div class="text-center">
+          <q-btn type="submit" :label="'Submit'" flat no-caps />
+        </div>
+      </q-form>
       <div
-        v-for="payment in user.payments"
-        :key="payment.id"
-        @click="showEditUserPaymentDialog(payment)"
+        v-if="user.latest_subscription"
+        class="bg-grey-8 text-white text-center rounded-borders"
       >
-        <q-icon name="paid" /> {{ payment.name }} <q-icon name="numbers" />{{
-          payment.pivot.number
-        }}
-        <q-icon name="person" v-if="payment.pivot.account_nam" />{{
-          payment.pivot.account_name
-        }}
+        <div>
+          Start Date:
+          {{ formatDate(user.latest_subscription.created_at, "DD/MM/YYYY") }}
+        </div>
+        <div>
+          End Date:
+          {{
+            formatDate(
+              addToDate(user.latest_subscription.created_at, {
+                days: user.latest_subscription.duration,
+              }),
+              "DD/MM/YYYY"
+            )
+          }}
+        </div>
+        <div>
+          Remaining Days:
+          {{
+            getDateDiff(
+              addToDate(user.latest_subscription.created_at, {
+                days: user.latest_subscription.duration,
+              }),
+              user.latest_subscription.created_at
+            )
+          }}
+        </div>
       </div>
-    </div>
-    <q-img :src="getImage(logoPicture?.name)" alt="logo">
-      <div class="absolute-bottom">Logo</div>
-      <PicturesSelector v-model="logo">
-        <template #showSelectedPictures="{ showPicturesToUpload }">
-          <q-btn
-            no-caps
-            outline
-            color="accent"
-            icon="visibility"
-            @click="showPicturesToUpload"
-          />
-        </template>
-        <template #deleteSelectedPictures="{ clearChosenImages }">
-          <q-btn
-            no-caps
-            outline
-            color="negative"
-            icon="delete"
-            @click="clearChosenImages"
-          />
-        </template>
-        <template #imagePicker="{ chooseImages }">
-          <q-btn
-            color="indigo"
-            @click="chooseImages"
-            no-caps
-            :label="'Add logo'"
-          />
-        </template>
-        <!-- <template #upload>
+    </q-expansion-item>
+    <q-expansion-item expand-separator label="Information">
+      <div class="q-px-sm row justify-between">
+        <q-btn @click="changeUserInfo('name')" no-caps flat>
+          Name : {{ user.name }}
+        </q-btn>
+        <q-btn @click="changeUserInfo('mobile')" no-caps flat>
+          Mobile: {{ user.mobile }}
+        </q-btn>
+      </div>
+    </q-expansion-item>
+    <q-expansion-item expand-separator label="Payment">
+      <q-form
+        @submit.prevent="addPaymentToUser"
+        class="q-pa-xs q-gutter-y-xs bg-light-blue-1 rounded-borders"
+      >
+        <q-select
+          :label="'Payments'"
+          v-model="selectedPayment"
+          :options="payments"
+          option-label="name"
+          option-value="id"
+        ></q-select>
+        <q-input v-model="accountName" dense :label="'Account Name'" />
+        <q-input v-model="number" required dense type="tel" :label="'Number'" />
+        <div class="text-center">
+          <q-btn icon="add" flat type="submit" />
+        </div>
+      </q-form>
+      <div>
+        <div
+          v-for="payment in user.payments"
+          :key="payment.id"
+          @click="showEditUserPaymentDialog(payment)"
+        >
+          <q-icon name="paid" /> {{ payment.name }} <q-icon name="numbers" />{{
+            payment.pivot.number
+          }}
+          <q-icon name="person" v-if="payment.pivot.account_nam" />{{
+            payment.pivot.account_name
+          }}
+        </div>
+      </div>
+    </q-expansion-item>
+    <q-expansion-item expand-separator label="Logo">
+      <q-img :src="getImage(logoPicture?.name)" alt="logo">
+        <div class="absolute-bottom">Logo</div>
+        <PicturesSelector v-model="logo">
+          <template #showSelectedPictures="{ showPicturesToUpload }">
+            <q-btn
+              no-caps
+              outline
+              color="accent"
+              icon="visibility"
+              @click="showPicturesToUpload"
+            />
+          </template>
+          <template #deleteSelectedPictures="{ clearChosenImages }">
+            <q-btn
+              no-caps
+              outline
+              color="negative"
+              icon="delete"
+              @click="clearChosenImages"
+            />
+          </template>
+          <template #imagePicker="{ chooseImages }">
+            <q-btn
+              color="indigo"
+              @click="chooseImages"
+              no-caps
+              :label="'Add logo'"
+            />
+          </template>
+          <!-- <template #upload>
           <q-btn color="primary" @click="upload" no-caps icon="upload" />
         </template> -->
-      </PicturesSelector>
-      <div class="absolute-top-right">
-        <q-btn
-          icon="save"
-          color="primary"
-          @click="savePicture(1)"
-          :disabled="!logo.length"
-        />
-      </div>
-    </q-img>
-
-    <q-img :src="getImage(backgroundPicture?.name)" alt="baclground">
-      <div class="absolute-bottom">Background</div>
-      <PicturesSelector v-model="background">
-        <template #showSelectedPictures="{ showPicturesToUpload }">
+        </PicturesSelector>
+        <div class="absolute-top-right">
           <q-btn
-            no-caps
-            outline
-            color="accent"
-            icon="visibility"
-            @click="showPicturesToUpload"
+            icon="save"
+            color="primary"
+            @click="savePicture(1)"
+            :disabled="!logo.length"
           />
-        </template>
-        <template #deleteSelectedPictures="{ clearChosenImages }">
-          <q-btn
-            no-caps
-            outline
-            color="negative"
-            icon="delete"
-            @click="clearChosenImages"
-          />
-        </template>
-        <template #imagePicker="{ chooseImages }">
-          <q-btn
-            color="indigo"
-            @click="chooseImages"
-            no-caps
-            :label="'Add Background'"
-          />
-        </template>
-        <!-- <template #upload>
+        </div>
+      </q-img>
+    </q-expansion-item>
+    <q-expansion-item expand-separator label="Background">
+      <q-img :src="getImage(backgroundPicture?.name)" alt="baclground">
+        <div class="absolute-bottom">Background</div>
+        <PicturesSelector v-model="background">
+          <template #showSelectedPictures="{ showPicturesToUpload }">
+            <q-btn
+              no-caps
+              outline
+              color="accent"
+              icon="visibility"
+              @click="showPicturesToUpload"
+            />
+          </template>
+          <template #deleteSelectedPictures="{ clearChosenImages }">
+            <q-btn
+              no-caps
+              outline
+              color="negative"
+              icon="delete"
+              @click="clearChosenImages"
+            />
+          </template>
+          <template #imagePicker="{ chooseImages }">
+            <q-btn
+              color="indigo"
+              @click="chooseImages"
+              no-caps
+              :label="'Add Background'"
+            />
+          </template>
+          <!-- <template #upload>
           <q-btn color="primary" @click="upload" no-caps icon="upload" />
         </template> -->
-      </PicturesSelector>
-      <div class="absolute-top-right">
-        <q-btn
-          icon="save"
-          color="primary"
-          @click="savePicture(2)"
-          :disabled="!background.length"
-        />
-      </div>
-    </q-img>
+        </PicturesSelector>
+        <div class="absolute-top-right">
+          <q-btn
+            icon="save"
+            color="primary"
+            @click="savePicture(2)"
+            :disabled="!background.length"
+          />
+        </div>
+      </q-img>
+    </q-expansion-item>
   </q-page>
 </template>
 
@@ -125,11 +183,11 @@
 import { computed, onMounted, ref } from "vue";
 import useBackend from "src/composables/backend";
 import { useRoute } from "vue-router";
-import { useQuasar } from "quasar";
+import { useQuasar, date } from "quasar";
 import PicturesSelector from "src/components/PicturesSelector.vue";
 import useApp from "src/composables/app";
 import EditPaymentInfoFormDialog from "src/components/EditPaymentInfoFormDialog";
-
+const { formatDate, addToDate, getDateDiff } = date;
 const user = ref(null);
 const {
   findUser,
@@ -139,10 +197,11 @@ const {
   addPayment,
   updateUserPaymentInfo,
   deleteUserPaymentInfo,
+  subscribeUser,
 } = useBackend();
 const route = useRoute();
 const { loading, dialog } = useQuasar();
-const { getImage } = useApp();
+const { getImage, successNotify } = useApp();
 const logo = ref([]);
 const background = ref([]);
 const payments = ref([]);
@@ -222,6 +281,27 @@ const showEditUserPaymentDialog = (payment) => {
           loading.hide();
         });
     }
+  });
+};
+const monthDuration = ref(3);
+const price = ref(20000);
+const subscribe = () => {
+  dialog({
+    title: "Are you sure?",
+  }).onOk(() => {
+    loading.show();
+    subscribeUser({
+      user_id: user.value.id,
+      day: Number(monthDuration.value) * 30,
+      price: price.value,
+    })
+      .then((data) => {
+        successNotify("Success");
+        user.value.latest_subscription = data;
+      })
+      .finally(() => {
+        loading.hide();
+      });
   });
 };
 const changeUserInfo = (field) => {

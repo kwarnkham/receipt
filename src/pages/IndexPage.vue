@@ -2,7 +2,7 @@
   <q-page
     class="flex flex-center page"
     :style="{
-      backgroundImage: 'url(' + getImage('/assets/home-bg.jpeg') + ')',
+      backgroundImage: 'url(' + getImage('assets/home-bg.jpeg') + ')',
     }"
   >
     <div class="full-width">

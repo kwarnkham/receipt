@@ -21,7 +21,13 @@
         />
         <q-toolbar-title>
           <q-icon :name="'img:' + getImage('assets/icon.png')" size="md" />
-          <q-chip icon="phone" color="teal" text-color="white">
+          <q-chip
+            icon="phone"
+            color="teal"
+            text-color="white"
+            @click="callNumber('09740813851')"
+            clickable
+          >
             09740813851
           </q-chip>
         </q-toolbar-title>
@@ -99,4 +105,7 @@ const links = computed(() =>
     else return e.meta.label;
   })
 );
+const callNumber = (number) => {
+  window.open("tel:" + number, "_self");
+};
 </script>

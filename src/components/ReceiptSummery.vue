@@ -9,14 +9,7 @@
         <div>
           <q-icon
             size="md"
-            :name="
-              'img:' +
-              getImage(
-                'assets/' +
-                  (payment.type == 1 ? 'kpay-logo' : 'wavepay-logo') +
-                  '.png'
-              )
-            "
+            :name="'img:' + getImage('assets/' + getPaymentLogo(payment.type))"
           />
         </div>
         <div :class="[payment.type == 1 ? 'kpay-color' : 'wavepay-color']">
@@ -115,7 +108,7 @@ const props = defineProps({
 });
 
 const { formatCurrency } = useUtility();
-const { validateNumber, getImage } = useApp();
+const { validateNumber, getImage, getPaymentLogo } = useApp();
 const discount = ref("");
 const deposit = ref("");
 const userStore = useUserStore();

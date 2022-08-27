@@ -57,5 +57,15 @@ export default function useApp() {
     isAdmin: (user) => {
       return user.roles?.map((e) => e.name).includes("admin");
     },
+    getPaymentLogo: (type) => {
+      switch (type) {
+        case 1:
+          return "kpay-logo.png";
+        case 2:
+          return "wavepay-logo.png";
+        case 3:
+          return "paynow-logo.png";
+      }
+    },
   };
 }

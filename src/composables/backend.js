@@ -6,6 +6,17 @@ export default function useBackend() {
   const handleResponse = useHandleResponse();
   const { buildForm, removeFalsyProperty } = useUtility();
   return {
+    subscribeUser: async (data) => {
+      try {
+        return await api({
+          method: "POST",
+          url: "subscription",
+          data: removeFalsyProperty(data),
+        }).then(({ data }) => data);
+      } catch (error) {
+        handleResponse(error);
+      }
+    },
     createPicture: async (data) => {
       try {
         return await api({
