@@ -1,5 +1,6 @@
 <template>
-  <q-page padding v-if="user" class="q-gutter-y-sm">
+  <q-page padding v-if="user" class="q-gutter-y-sm bg-grey-4">
+    <div class="text-subtitle1 text-center">{{ user.name }}</div>
     <q-expansion-item expand-separator label="Subscription">
       <q-form @submit.prevent="subscribe">
         <q-input
@@ -176,6 +177,17 @@
         </div>
       </q-img>
     </q-expansion-item>
+    <div class="row justify-evenly">
+      <div>
+        <q-btn
+          :label="'Reset Password'"
+          color="teal"
+          no-caps
+          outline
+          @click="resetPassword"
+        />
+      </div>
+    </div>
   </q-page>
 </template>
 
@@ -198,6 +210,7 @@ const {
   updateUserPaymentInfo,
   deleteUserPaymentInfo,
   subscribeUser,
+  resetUserPassword,
 } = useBackend();
 const route = useRoute();
 const { loading, dialog } = useQuasar();
@@ -320,6 +333,21 @@ const changeUserInfo = (field) => {
     updateUserInfo(data)
       .then((data) => {
         user.value = data;
+      })
+      .finally(() => {
+        loading.hide();
+      });
+  });
+};
+
+const resetPassword = () => {
+  dialog({
+    title: "Confirm reset password",
+  }).onOk(() => {
+    loading.show();
+    resetUserPassword(user.value.id)
+      .then((_) => {
+        if (_) successNotify("Reset success");
       })
       .finally(() => {
         loading.hide();

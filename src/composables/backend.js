@@ -107,6 +107,16 @@ export default function useBackend() {
         handleResponse(error);
       }
     },
+    resetUserPassword: async (user_id) => {
+      try {
+        return await api({
+          method: "POST",
+          url: `/user/${user_id}/password`,
+        }).then(({ data }) => data);
+      } catch (error) {
+        handleResponse(error);
+      }
+    },
     fetchKnownItems: async () => {
       try {
         return await api({
