@@ -10,10 +10,15 @@
     "lint": "eslint --ext .js,.vue ./",
     "format": "prettier --write \"**/*.{js,vue,scss,html,md,json}\" --ignore-path .gitignore",
     "test": "echo \"No test specified\" && exit 0",
-    "build": "quasar clean && cp .env.production .env && quasar build -m pwa && npm run export",
+    "build-pwa": "quasar build -m pwa",
+    "build": "npm run prepare && npm run build-pwa && npm run build-capacitor && npm run sign-apk && npm run optimize-apk && npm run export",
     "export": "rm -f spa.zip && if [[ $OSTYPE == msys ]]; then npm run zip-windows; else npm run zip-macos; fi",
     "zip-macos": "ditto -c -k --sequesterRsrc --keepParent dist/pwa spa.zip",
-    "zip-windows": "cd dist && zip -r ../spa.zip ./spa && cd ../"
+    "zip-windows": "cd dist && zip -r ../spa.zip ./spa && cd ../",
+    "build-capacitor": "quasar build -m capacitor -T android",
+    "sign-apk": "jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore receipt-release-key.keystore dist/capacitor/android/apk/release/app-release-unsigned.apk MOON -storepass ninjasaga",
+    "optimize-apk": "rm -f *.apk && zipalign -v 4 dist/capacitor/android/apk/release/app-release-unsigned.apk PhoneVoucher.apk",
+    "prepare": "quasar clean && cp .env.production .env"
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
