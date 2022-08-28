@@ -21,24 +21,31 @@
           v-if="$route.name != 'index' && $route.meta.requireAuth"
         />
         <q-toolbar-title class="row justify-between no-wrap">
-          <q-icon
-            :name="'img:' + getImage('assets/icon.png')"
-            size="md"
-            @click="
-              $router.push({
-                name: 'index',
-              })
-            "
-          />
-          <q-btn
-            icon="phone"
-            color="teal"
-            text-color="white"
-            @click="callNumber('09740813851')"
-            dense
-            round
-          >
-          </q-btn>
+          <div style="width: 40px">
+            <q-img
+              :src="getImage('assets/icon.png')"
+              alt="logo"
+              height="34px"
+              fit="contain"
+              @click="
+                $router.push({
+                  name: 'index',
+                })
+              "
+            />
+          </div>
+          <div>
+            <q-btn
+              icon="phone"
+              color="teal"
+              text-color="white"
+              @click="callNumber('09740813851')"
+              dense
+              round
+            >
+            </q-btn>
+          </div>
+
           <LanguageSwitcher />
         </q-toolbar-title>
 
