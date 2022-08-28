@@ -47,7 +47,9 @@
         <q-btn icon="phone" flat @click="callNumber('09740813851')" />
       </q-card-actions>
     </q-card>
-    <q-card v-else> You don't have any active subscription </q-card>
+    <q-card v-else class="q-pa-xl text-center">
+      You don't have any active subscription
+    </q-card>
   </q-page>
 </template>
 

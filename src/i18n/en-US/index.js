@@ -5,5 +5,8 @@ export default {
   login: "Login",
   newReceipt: "New Receipt",
   addedReceipts: "Added Receipts",
-  success: "Action was successful",
+  changePassword: "Change Password",
+  subscription: "Subscription",
+  logout: "Logout",
+  doYouWantToLogout: "Do you want to logout?",
 };

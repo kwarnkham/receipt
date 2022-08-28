@@ -5,4 +5,8 @@ export default {
   login: "အကောင့်ဝင်ရန်",
   newReceipt: "ဘောင်ချာအသစ်ရေးရန်",
   addedReceipts: "ရောင်းပြီးသားဘောင်ချာဟောင်းများ",
+  changePassword: "Change Password",
+  subscription: "Subscription",
+  logout: "Logout",
+  doYouWantToLogout: "Do you want to logout?",
 };

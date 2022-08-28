@@ -46,7 +46,7 @@
             </q-btn>
           </div>
 
-          <LanguageSwitcher />
+          <LanguageSwitcher v-if="$route.name == 'login'" />
         </q-toolbar-title>
 
         <div>
@@ -81,9 +81,6 @@
             <q-item-section> {{ link.meta.label }} </q-item-section>
           </q-item>
         </template>
-        <q-item clickable @click="logout">
-          <q-item-section> Logout </q-item-section>
-        </q-item>
       </q-list>
     </q-drawer>
 
@@ -98,9 +95,6 @@ import { computed, ref } from "vue";
 import routes from "src/router/routes";
 import { useUserStore } from "src/stores/user";
 import useApp from "src/composables/app";
-import { useQuasar } from "quasar";
-import { api } from "src/boot/axios";
-import { useRouter } from "vue-router";
 import LanguageSwitcher from "src/components/LanguageSwitcher.vue";
 const { children } = routes[0];
 const { isAdmin, getImage, callNumber } = useApp();
@@ -108,17 +102,7 @@ const leftDrawerOpen = ref(false);
 const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 };
-const { localStorage } = useQuasar();
-const router = useRouter();
-const logout = () => {
-  const user = userStore.getUser;
-  localStorage.remove(user.id + "knownUsers");
-  localStorage.remove(user.id + "knownItems");
-  localStorage.remove("token");
-  userStore.setUser(null);
-  api.defaults.headers.common["Authorization"] = undefined;
-  router.replace({ name: "login" });
-};
+
 const userStore = useUserStore();
 const links = computed(() =>
   children.filter((e) => {
