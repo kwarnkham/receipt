@@ -175,14 +175,16 @@ onMounted(() => {
     loading.show();
     findReceipt(route.params.id)
       .then((data) => {
-        receipt.value = data;
-        data.items.forEach((e, key) => {
-          const temp = e;
-          temp.quantity = temp.pivot.quantity;
-          temp.price = temp.pivot.price;
-          temp.key = key + 1;
-          items.value.splice(key, 1, temp);
-        });
+        if (data) {
+          receipt.value = data;
+          data.items.forEach((e, key) => {
+            const temp = e;
+            temp.quantity = temp.pivot.quantity;
+            temp.price = temp.pivot.price;
+            temp.key = key + 1;
+            items.value.splice(key, 1, temp);
+          });
+        }
       })
       .finally(() => {
         loading.hide();

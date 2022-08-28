@@ -116,7 +116,12 @@ const total = computed(() =>
   props.items.reduce((carry, item) => carry + item.price * item.quantity, 0)
 );
 
-const grandTotal = computed(() => total.value - deposit.value - discount.value);
+const grandTotal = computed(
+  () =>
+    total.value -
+    (props.receipt ? props.receipt.deposit : deposit.value) -
+    (props.receipt ? props.receipt.discount : discount.value)
+);
 
 defineExpose({
   deposit,
