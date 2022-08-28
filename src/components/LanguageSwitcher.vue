@@ -41,7 +41,8 @@ watch(lang, (val) => {
   ).then((lang) => {
     $q.lang.set(lang.default);
     locale.value = val;
-    console.log($q.lang.getLocale());
+    $q.localStorage.set("locale", val);
+    // console.log($q.lang.isoName);
   });
 });
 </script>

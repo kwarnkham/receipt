@@ -1,10 +1,12 @@
 import { boot } from "quasar/wrappers";
 import { createI18n } from "vue-i18n";
 import messages from "src/i18n";
+import { LocalStorage } from "quasar";
 
 export default boot(({ app }) => {
+  const locale = LocalStorage.getItem("locale") ?? "mm";
   const i18n = createI18n({
-    locale: "mm",
+    locale,
     globalInjection: true,
     messages,
     legacy: false,

@@ -1,8 +1,7 @@
-import { Quasar } from "quasar";
+import { LocalStorage, Quasar } from "quasar";
 
 export default async () => {
-  const langIso = "mm"; // ... some logic to determine it (use Cookies Plugin?)
-
+  const langIso = LocalStorage.getItem("locale") ?? "mm";
   try {
     await import(
       /* webpackInclude: /(mm|en-US)\.js$/ */
