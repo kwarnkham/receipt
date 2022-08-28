@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Phone Voucher</string>
+    <string name="title_activity_main">Phone Voucher</string>
+    <string name="package_name">org.madewithheart.receipt.app</string>
+    <string name="custom_url_scheme">org.madewithheart.receipt.app</string>
+</resources>

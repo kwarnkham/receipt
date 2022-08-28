@@ -5,8 +5,12 @@ node_modules
 .env
 deploy.md
 .env.*
-spa.zip
+*.zip
 todo.md
+*.keystore
+*.keystore.old
+*.apk
+
 
 # Quasar core related directories
 .quasar
