@@ -2,11 +2,10 @@
   <q-btn-group v-if="langOptions">
     <q-btn
       no-caps
-      dense
       :outline="option.value != lang"
       :glossy="option.value == lang"
       v-for="option in langOptions"
-      :label="option.label"
+      :label="label[option.value]"
       :key="option.value"
       @click="lang = option.value"
       :color="option.value == lang ? 'positive' : 'white'"
@@ -32,6 +31,11 @@ const langOptions = appLanguages.map((lang) => ({
 const $q = useQuasar();
 const lang = ref($q.lang.isoName);
 const { locale } = useI18n({ useScope: "global" });
+
+const label = {
+  "en-US": "English",
+  mm: "မြန်မာ",
+};
 
 watch(lang, (val) => {
   // dynamic import, so loading on demand only
