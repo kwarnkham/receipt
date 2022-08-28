@@ -87,6 +87,10 @@ module.exports = configure(function (ctx) {
     // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-framework
     framework: {
       config: {
+        capacitor: {
+          backButtonExit: false,
+          backButton: true,
+        },
         brand: {
           primary: "#163475",
           secondary: "#26A69A",
@@ -204,10 +208,7 @@ module.exports = configure(function (ctx) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-webpack/developing-capacitor-apps/configuring-capacitor
     capacitor: {
-      hideSplashscreen: true,
-      backButtonExit: false,
-      backButton: true,
-      version: appEnvs.APP_VERSION,
+      hideSplashscreen: false,
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-webpack/developing-electron-apps/configuring-electron
