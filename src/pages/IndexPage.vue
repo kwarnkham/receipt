@@ -8,26 +8,32 @@
     <div class="full-width">
       <q-img :src="getImage('assets/logo.png')"></q-img>
       <div class="row full-width no-wrap">
-        <q-img
-          :src="getImage('assets/invoice-add.png')"
-          height="150px"
-          fit="contain"
-          @click="
-            $router.push({
-              name: 'createReceipt',
-            })
-          "
-        />
-        <q-img
-          :src="getImage('assets/invoice-done.png')"
-          height="150px"
-          fit="contain"
-          @click="
-            $router.push({
-              name: 'receipts',
-            })
-          "
-        />
+        <div class="col-6 text-center">
+          <q-img
+            :src="getImage('assets/invoice-add.png')"
+            height="150px"
+            fit="contain"
+            @click="
+              $router.push({
+                name: 'createReceipt',
+              })
+            "
+          />
+          <div>{{ $t("newReceipt") }}</div>
+        </div>
+        <div class="col-6 text-center">
+          <q-img
+            :src="getImage('assets/invoice-done.png')"
+            height="150px"
+            fit="contain"
+            @click="
+              $router.push({
+                name: 'receipts',
+              })
+            "
+          />
+          <div>{{ $t("addedReceipts") }}</div>
+        </div>
       </div>
     </div>
   </q-page>

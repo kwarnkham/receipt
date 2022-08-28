@@ -9,6 +9,7 @@
           icon="menu"
           aria-label="Menu"
           @click="toggleLeftDrawer"
+          v-if="$route.meta.requireAuth"
         />
         <q-btn
           flat
@@ -17,9 +18,9 @@
           icon="keyboard_arrow_left"
           aria-label="Back"
           @click="$router.go(-1)"
-          v-if="$route.name != 'index'"
+          v-if="$route.name != 'index' && $route.meta.requireAuth"
         />
-        <q-toolbar-title>
+        <q-toolbar-title class="row justify-between no-wrap">
           <q-icon
             :name="'img:' + getImage('assets/icon.png')"
             size="md"
@@ -29,15 +30,16 @@
               })
             "
           />
-          <q-chip
+          <q-btn
             icon="phone"
             color="teal"
             text-color="white"
             @click="callNumber('09740813851')"
-            clickable
+            dense
+            round
           >
-            09740813851
-          </q-chip>
+          </q-btn>
+          <LanguageSwitcher />
         </q-toolbar-title>
 
         <div>
@@ -92,6 +94,7 @@ import useApp from "src/composables/app";
 import { useQuasar } from "quasar";
 import { api } from "src/boot/axios";
 import { useRouter } from "vue-router";
+import LanguageSwitcher from "src/components/LanguageSwitcher.vue";
 const { children } = routes[0];
 const { isAdmin, getImage, callNumber } = useApp();
 const leftDrawerOpen = ref(false);

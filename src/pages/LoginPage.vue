@@ -10,7 +10,7 @@
       @submit.prevent="submit"
       class="q-gutter-y-lg bg-white rounded-borders form"
     >
-      <div class="text-light-blue">Login</div>
+      <div class="text-light-blue">{{ $t("login") }}</div>
       <q-input
         dense
         :label="'Phone Number'"
