@@ -1,22 +1,53 @@
 <template>
-  <q-page padding class="flex flex-center">
-    <q-form @submit.prevent="submit" class="q-pa-xs q-gutter-y-xs full-width">
+  <q-page
+    padding
+    class="flex flex-center page"
+    :style="{
+      backgroundImage: 'url(' + getImage('assets/login-bg.jpeg') + ')',
+    }"
+  >
+    <q-form
+      @submit.prevent="submit"
+      class="q-gutter-y-lg bg-white rounded-borders form"
+    >
+      <div class="text-light-blue">Login</div>
       <q-input
+        dense
         :label="'Phone Number'"
         v-model="mobile"
         required
         type="tel"
         autocomplete="username"
-      />
+        outlined
+        color="light-blue"
+      >
+        <template v-slot:prepend>
+          <q-icon name="phone" color="light-blue" />
+        </template>
+      </q-input>
+
       <q-input
+        dense
         :label="'Password'"
         v-model="password"
         required
         type="password"
         autocomplete="password"
-      />
+        outlined
+        color="light-blue"
+      >
+        <template v-slot:prepend>
+          <q-icon name="lock" color="light-blue" />
+        </template>
+      </q-input>
       <div class="text-center">
-        <q-btn :label="'Login'" type="submit" color="primary" />
+        <q-btn
+          :label="'Login'"
+          type="submit"
+          color="primary"
+          class="full-width"
+          no-caps
+        />
       </div>
     </q-form>
   </q-page>
@@ -33,7 +64,7 @@ const mobile = ref("");
 const password = ref("");
 const { loading, localStorage } = useQuasar();
 const { login, fetchKnownItems, fetchKnownUsers } = useBackend();
-const { preserveToken } = useApp();
+const { preserveToken, getImage } = useApp();
 const router = useRouter();
 const submit = () => {
   loading.show();
@@ -66,3 +97,16 @@ const submit = () => {
     });
 };
 </script>
+
+<style scoped lang="scss">
+.page {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+.form {
+  border: 2px solid $light-blue;
+  width: 80vw;
+  padding: 20px;
+}
+</style>
