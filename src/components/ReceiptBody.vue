@@ -101,6 +101,9 @@ thead {
   z-index: 10;
   background-color: rgba($color: #000000, $alpha: 1);
   color: white;
+  th {
+    border-color: white;
+  }
 }
 
 .number-column {
