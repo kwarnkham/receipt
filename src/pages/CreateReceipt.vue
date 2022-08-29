@@ -48,7 +48,8 @@ const { getDateDiff, formatDate, addToDate } = date;
 const { loading, localStorage } = useQuasar();
 const { pageOptions } = useUtility();
 const { createReceipt, findReceipt } = useBackend();
-const { errorNotify, successNotify, getImage, warningNotify } = useApp();
+const { errorNotify, successNotify, getImage, warningNotify, isAdmin } =
+  useApp();
 const { findUser } = useBackend();
 const route = useRoute();
 const header = ref(null);
@@ -177,6 +178,7 @@ const resetData = () => {
 };
 
 const notifyUserNearExpiration = () => {
+  if (isAdmin(userStore.getUser)) return;
   const now = Date.now();
   if (getDateDiff(now, subscription.created_at) > subscription.duration - 7) {
     const lastNotified = localStorage.getItem("lastNotified");
