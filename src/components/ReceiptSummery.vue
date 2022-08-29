@@ -26,13 +26,13 @@
     <div class="col text-caption">
       <div class="row text-right">
         <div class="col row items-center">
-          <div class="footer-label">Total:</div>
+          <div class="footer-label">{{ $t("total") }}:</div>
           <div class="col outline">{{ formatCurrency(total) }}</div>
         </div>
       </div>
       <div class="row text-right">
         <div class="col row items-center">
-          <div class="footer-label">Deposit:</div>
+          <div class="footer-label">{{ $t("deposit") }}:</div>
           <div class="col outline">
             {{ formatCurrency(receipt ? receipt.deposit : deposit) }}
           </div>
@@ -56,7 +56,7 @@
       </div>
       <div class="row text-right">
         <div class="col row items-center">
-          <div class="footer-label">Discount:</div>
+          <div class="footer-label">{{ $t("discount") }}:</div>
           <div class="col outline">
             {{ formatCurrency(receipt ? receipt.discount : discount) }}
           </div>
@@ -80,7 +80,7 @@
       </div>
       <div class="row text-right text-weight-bolder text-body2">
         <div class="col row items-center">
-          <div class="footer-label">Grand total:</div>
+          <div class="footer-label">{{ $t("grandTotal") }}:</div>
           <div class="col outline">
             {{ formatCurrency(grandTotal) }}
           </div>

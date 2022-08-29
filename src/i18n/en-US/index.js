@@ -10,4 +10,13 @@ export default {
   logout: "Logout",
   doYouWantToLogout: "Do you want to logout?",
   download: "Download",
+  "no.": "No.",
+  name: "Name",
+  qty: "Qty",
+  price: "Price",
+  amount: "Amount",
+  total: "Total",
+  deposit: "Deposit",
+  discount: "Discount",
+  grandTotal: "Grand Total",
 };

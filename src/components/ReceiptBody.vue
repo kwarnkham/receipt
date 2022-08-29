@@ -9,11 +9,11 @@
     >
       <thead>
         <tr>
-          <th class="text-left number-column">No.</th>
-          <th class="text-left">Name</th>
-          <th class="text-right">Qty</th>
-          <th class="text-right">Price</th>
-          <th class="text-right">Amount</th>
+          <th class="text-left number-column">{{ $t("no.") }}</th>
+          <th class="text-left">{{ $t("name") }}</th>
+          <th class="text-right">{{ $t("qty") }}</th>
+          <th class="text-right">{{ $t("price") }}</th>
+          <th class="text-right">{{ $t("amount") }}</th>
         </tr>
       </thead>
       <tbody>
