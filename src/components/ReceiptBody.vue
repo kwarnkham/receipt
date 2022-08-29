@@ -7,7 +7,9 @@
       flat
       dense
     >
-      <thead>
+      <thead
+        :style="{ backgroundColor: userStore.getUser.setting?.table_color }"
+      >
         <tr>
           <th class="text-left number-column">{{ $t("no.") }}</th>
           <th class="text-left">{{ $t("name") }}</th>
@@ -18,21 +20,38 @@
       </thead>
       <tbody>
         <tr v-for="item in items" :key="item.key" @click="fillItem(item)">
-          <td class="text-left number-column">{{ item.key }}</td>
+          <td
+            class="text-left number-column"
+            :style="{ borderColor: userStore.getUser.setting?.table_color }"
+          >
+            {{ item.key }}
+          </td>
 
-          <td class="text-left">
+          <td
+            class="text-left"
+            :style="{ borderColor: userStore.getUser.setting?.table_color }"
+          >
             {{ item.name }}
           </td>
 
-          <td class="text-right">
+          <td
+            class="text-right"
+            :style="{ borderColor: userStore.getUser.setting?.table_color }"
+          >
             {{ item.quantity }}
           </td>
-          <td class="text-right">
+          <td
+            class="text-right"
+            :style="{ borderColor: userStore.getUser.setting?.table_color }"
+          >
             <span v-if="item.price">
               {{ formatCurrency(item.price) }}
             </span>
           </td>
-          <td class="text-right">
+          <td
+            class="text-right"
+            :style="{ borderColor: userStore.getUser.setting?.table_color }"
+          >
             <span v-if="item.quantity * item.price">
               {{ formatCurrency(item.quantity * item.price) }}
             </span>
@@ -58,6 +77,7 @@
 import { useQuasar } from "quasar";
 import useUtility from "src/composables/utility";
 import ItemFormDialog from "src/components/ItemFormDialog";
+import { useUserStore } from "src/stores/user";
 
 const props = defineProps({
   items: {
@@ -68,7 +88,7 @@ const props = defineProps({
     required: true,
   },
 });
-
+const userStore = useUserStore();
 const emit = defineEmits(["addRow", "itemFilled"]);
 
 const { formatCurrency } = useUtility();
@@ -99,7 +119,6 @@ thead {
   position: sticky;
   top: 0;
   z-index: 10;
-  background-color: rgba($color: #000000, $alpha: 1);
   color: white;
   th {
     border-color: white;
@@ -112,7 +131,6 @@ thead {
 tr {
   td {
     font-size: 11px !important;
-    border-color: black;
   }
 }
 </style>

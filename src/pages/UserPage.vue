@@ -177,6 +177,18 @@
         </div>
       </q-img>
     </q-expansion-item>
+    <q-expansion-item expand-separator label="Table color">
+      <div class="row items-center">
+        <q-input
+          class="col"
+          label="Color Code"
+          v-model="tableColor"
+          outlined
+          :input-style="{ backgroundColor: tableColor }"
+        />
+        <div><q-btn label="Set" no-caps flat @click="setTableColor" /></div>
+      </div>
+    </q-expansion-item>
     <div class="row justify-evenly">
       <div>
         <q-btn
@@ -211,6 +223,7 @@ const {
   deleteUserPaymentInfo,
   subscribeUser,
   resetUserPassword,
+  setSetting,
 } = useBackend();
 const route = useRoute();
 const { loading, dialog } = useQuasar();
@@ -220,10 +233,21 @@ const background = ref([]);
 const payments = ref([]);
 const accountName = ref("");
 const number = ref("");
+const tableColor = ref("");
 const selectedPayment = ref(null);
 const logoPicture = computed(() =>
   user.value?.pictures.find((e) => e.type == 1)
 );
+
+const setTableColor = () => {
+  if (!tableColor.value) return;
+  loading.show();
+  setSetting({ user_id: user.value.id, table_color: tableColor.value }).finally(
+    () => {
+      loading.hide();
+    }
+  );
+};
 
 const addPaymentToUser = () => {
   loading.show();
@@ -384,6 +408,7 @@ onMounted(() => {
   findUser(route.params.id)
     .then((data) => {
       user.value = data;
+      tableColor.value = data.setting.table_color;
     })
     .finally(() => {
       fetchPayments()

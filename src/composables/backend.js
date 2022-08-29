@@ -17,6 +17,17 @@ export default function useBackend() {
         handleResponse(error);
       }
     },
+    setSetting: async (data) => {
+      try {
+        return await api({
+          method: "POST",
+          url: "setting/" + data.user_id,
+          data: removeFalsyProperty(data),
+        }).then(({ data }) => data);
+      } catch (error) {
+        handleResponse(error);
+      }
+    },
     createPicture: async (data) => {
       try {
         return await api({
