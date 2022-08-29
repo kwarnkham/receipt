@@ -7,9 +7,7 @@
       flat
       dense
     >
-      <thead
-        :style="{ backgroundColor: userStore.getUser.setting?.table_color }"
-      >
+      <thead :style="{ backgroundColor: user?.setting?.table_color }">
         <tr>
           <th class="text-left number-column">{{ $t("no.") }}</th>
           <th class="text-left">{{ $t("name") }}</th>
@@ -22,27 +20,27 @@
         <tr v-for="item in items" :key="item.key" @click="fillItem(item)">
           <td
             class="text-left number-column"
-            :style="{ borderColor: userStore.getUser.setting?.table_color }"
+            :style="{ borderColor: user?.setting?.table_color }"
           >
             {{ item.key }}
           </td>
 
           <td
             class="text-left"
-            :style="{ borderColor: userStore.getUser.setting?.table_color }"
+            :style="{ borderColor: user?.setting?.table_color }"
           >
             {{ item.name }}
           </td>
 
           <td
             class="text-right"
-            :style="{ borderColor: userStore.getUser.setting?.table_color }"
+            :style="{ borderColor: user?.setting?.table_color }"
           >
             {{ item.quantity }}
           </td>
           <td
             class="text-right"
-            :style="{ borderColor: userStore.getUser.setting?.table_color }"
+            :style="{ borderColor: user?.setting?.table_color }"
           >
             <span v-if="item.price">
               {{ formatCurrency(item.price) }}
@@ -50,7 +48,7 @@
           </td>
           <td
             class="text-right"
-            :style="{ borderColor: userStore.getUser.setting?.table_color }"
+            :style="{ borderColor: user?.setting?.table_color }"
           >
             <span v-if="item.quantity * item.price">
               {{ formatCurrency(item.quantity * item.price) }}
@@ -86,6 +84,10 @@ const props = defineProps({
   },
   receipt: {
     required: true,
+  },
+  user: {
+    required: true,
+    type: Object,
   },
 });
 const userStore = useUserStore();

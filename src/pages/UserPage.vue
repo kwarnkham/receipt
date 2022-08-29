@@ -1,6 +1,21 @@
 <template>
   <q-page padding v-if="user" class="q-gutter-y-sm bg-grey-4">
-    <div class="text-subtitle1 text-center">{{ user.name }}</div>
+    <div class="text-subtitle1 text-center">
+      {{ user.name }}
+      <q-btn
+        icon="visibility"
+        flat
+        size="xs"
+        @click="
+          $router.push({
+            name: 'createReceipt',
+            query: {
+              user: user.id,
+            },
+          })
+        "
+      />
+    </div>
     <q-expansion-item expand-separator label="Subscription">
       <q-form @submit.prevent="subscribe">
         <q-input

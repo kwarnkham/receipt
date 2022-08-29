@@ -5,7 +5,7 @@
       :style="{
         backgroundImage:
           'url(' +
-          getImage(userStore.getUser?.pictures.find((e) => e.type == 1)?.name) +
+          getImage(user?.pictures.find((e) => e.type == 1)?.name) +
           ')',
       }"
     ></div>
@@ -14,7 +14,7 @@
       :style="{
         backgroundImage:
           'url(' +
-          getImage(userStore.getUser?.pictures.find((e) => e.type == 2)?.name) +
+          getImage(user?.pictures.find((e) => e.type == 2)?.name) +
           ')',
       }"
     >
@@ -24,6 +24,7 @@
         @addRow="addRow"
         :receipt="receipt"
         @itemFilled="fillItem"
+        :user="user"
       />
       <ReceiptSummery :receipt="receipt" :items="items" ref="summery" />
     </div>
@@ -48,12 +49,14 @@ const { loading, localStorage } = useQuasar();
 const { pageOptions } = useUtility();
 const { createReceipt, findReceipt } = useBackend();
 const { errorNotify, successNotify, getImage, warningNotify } = useApp();
+const { findUser } = useBackend();
 const route = useRoute();
 const header = ref(null);
 const summery = ref(null);
 const userStore = useUserStore();
 const subscription = userStore.getUser.latest_subscription;
-
+const viewedAsUser = ref(null);
+const user = computed(() => viewedAsUser.value ?? userStore.getUser);
 const addRow = () => {
   items.value.push({
     key: items.value.length + 1,
@@ -213,6 +216,12 @@ onMounted(() => {
       .finally(() => {
         loading.hide();
       });
+  }
+
+  if (route.query.user) {
+    findUser(route.query.user).then((data) => {
+      viewedAsUser.value = data;
+    });
   }
 
   emitter.on("createReceipt", submit);
