@@ -27,6 +27,13 @@ export default function useApp() {
         ...options,
       });
     },
+    warningNotify: (message, options = {}) => {
+      notify({
+        message,
+        type: "warning",
+        ...options,
+      });
+    },
     preserveToken: ({ user, token }) => {
       localStorage.set("token", token);
       api.defaults.headers.common["Authorization"] = "Bearer " + token;

@@ -32,7 +32,7 @@
 
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-import { useQuasar } from "quasar";
+import { useQuasar, date } from "quasar";
 import useUtility from "src/composables/utility";
 import useBackend from "src/composables/backend";
 import { emitter } from "src/boot/eventEmitter";
@@ -42,15 +42,18 @@ import ReceiptHeader from "../components/ReceiptHeader.vue";
 import ReceiptBody from "src/components/ReceiptBody.vue";
 import ReceiptSummery from "src/components/ReceiptSummery.vue";
 import { useUserStore } from "src/stores/user";
+const { getDateDiff, formatDate, addToDate } = date;
 
 const { loading, localStorage } = useQuasar();
 const { pageOptions } = useUtility();
 const { createReceipt, findReceipt } = useBackend();
-const { errorNotify, successNotify, getImage } = useApp();
+const { errorNotify, successNotify, getImage, warningNotify } = useApp();
 const route = useRoute();
 const header = ref(null);
 const summery = ref(null);
 const userStore = useUserStore();
+const subscription = userStore.getUser.latest_subscription;
+
 const addRow = () => {
   items.value.push({
     key: items.value.length + 1,
@@ -170,7 +173,28 @@ const resetData = () => {
   }));
 };
 
+const notifyUserNearExpiration = () => {
+  const now = Date.now();
+  if (getDateDiff(now, subscription.created_at) > subscription.duration - 7) {
+    const lastNotified = localStorage.getItem("lastNotified");
+    if (!lastNotified || getDateDiff(now, lastNotified, "hours") >= 24) {
+      warningNotify(
+        "Your account will expired after " +
+          formatDate(
+            addToDate(subscription.created_at, {
+              days: subscription.duration,
+            }),
+            "DD/MM/YYYY"
+          ),
+        { position: "center" }
+      );
+      localStorage.set("lastNotified", now);
+    }
+  }
+};
+
 onMounted(() => {
+  notifyUserNearExpiration();
   if (route.params.id) {
     loading.show();
     findReceipt(route.params.id)
