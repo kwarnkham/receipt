@@ -1,68 +1,86 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-          v-if="$route.meta.requireAuth"
-        />
-        <q-btn
-          flat
-          dense
-          round
-          icon="keyboard_arrow_left"
-          aria-label="Back"
-          @click="$router.go(-1)"
-          v-if="$route.name != 'index' && $route.meta.requireAuth"
-        />
-        <q-toolbar-title class="row justify-between no-wrap">
-          <div style="width: 40px">
-            <q-img
-              :src="getImage('assets/icon.png')"
-              alt="logo"
-              height="34px"
-              fit="contain"
-              @click="
-                $router.push({
-                  name: 'index',
-                })
-              "
-            />
-          </div>
+    <transition
+      enter-active-class="animated slideInDown"
+      leave-active-class="animated slideOutUp"
+    >
+      <q-header elevated v-if="!takingSS">
+        <q-toolbar>
+          <q-btn
+            flat
+            dense
+            round
+            icon="menu"
+            aria-label="Menu"
+            @click="toggleLeftDrawer"
+            v-if="$route.meta.requireAuth"
+          />
+          <q-btn
+            flat
+            dense
+            round
+            icon="keyboard_arrow_left"
+            aria-label="Back"
+            @click="$router.go(-1)"
+            v-if="$route.name != 'index' && $route.meta.requireAuth"
+          />
+          <q-toolbar-title class="row justify-between no-wrap">
+            <div style="width: 40px">
+              <q-img
+                :src="getImage('assets/icon.png')"
+                alt="logo"
+                height="34px"
+                fit="contain"
+                @click="
+                  $router.push({
+                    name: 'index',
+                  })
+                "
+              />
+            </div>
+            <div>
+              <q-btn
+                icon="phone"
+                color="teal"
+                text-color="white"
+                @click="callNumber('09740813851')"
+                dense
+                round
+              >
+              </q-btn>
+            </div>
+
+            <LanguageSwitcher v-if="$route.name == 'login'" />
+          </q-toolbar-title>
+
           <div>
             <q-btn
-              icon="phone"
-              color="teal"
-              text-color="white"
-              @click="callNumber('09740813851')"
-              dense
-              round
+              icon="touch_app"
+              flat
+              v-if="$route.name == 'createReceipt' || $route.name == 'receipt'"
             >
+              <q-menu max-width="57px" auto-close>
+                <q-btn
+                  icon="save"
+                  flat
+                  @click="$emitter.emit('createReceipt')"
+                />
+                <q-btn
+                  icon="add"
+                  flat
+                  @click="$emitter.emit('addNewReceipt')"
+                />
+                <q-btn
+                  icon="screenshot"
+                  flat
+                  @click="hideHeaderAndFooterForScreenshot"
+                />
+              </q-menu>
             </q-btn>
           </div>
-
-          <LanguageSwitcher v-if="$route.name == 'login'" />
-        </q-toolbar-title>
-
-        <div>
-          <q-btn
-            icon="touch_app"
-            flat
-            v-if="$route.name == 'createReceipt' || $route.name == 'receipt'"
-          >
-            <q-menu max-width="57px">
-              <q-btn icon="save" flat @click="$emitter.emit('createReceipt')" />
-              <q-btn icon="add" flat @click="$emitter.emit('addNewReceipt')" />
-            </q-menu>
-          </q-btn>
-        </div>
-      </q-toolbar>
-    </q-header>
+        </q-toolbar>
+      </q-header>
+    </transition>
 
     <q-drawer
       v-model="leftDrawerOpen"
@@ -96,14 +114,24 @@ import routes from "src/router/routes";
 import { useUserStore } from "src/stores/user";
 import useApp from "src/composables/app";
 import LanguageSwitcher from "src/components/LanguageSwitcher.vue";
+import useBackend from "src/composables/backend";
+import domtoimage from "dom-to-image";
 const { children } = routes[0];
 const { isAdmin, getImage, callNumber } = useApp();
+const { uploadImageForPrinting } = useBackend();
 const leftDrawerOpen = ref(false);
 const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 };
 
 const userStore = useUserStore();
+const takingSS = ref(false);
+const hideHeaderAndFooterForScreenshot = () => {
+  takingSS.value = true;
+  setTimeout(() => {
+    takingSS.value = false;
+  }, 3000);
+};
 const links = computed(() =>
   children.filter((e) => {
     if (userStore.getUser) return e.name != "login" && e.meta.label;
