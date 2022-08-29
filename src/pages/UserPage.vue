@@ -423,7 +423,7 @@ onMounted(() => {
   findUser(route.params.id)
     .then((data) => {
       user.value = data;
-      tableColor.value = data.setting.table_color;
+      tableColor.value = data.setting?.table_color;
     })
     .finally(() => {
       fetchPayments()

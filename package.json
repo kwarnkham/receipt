@@ -12,6 +12,7 @@
     "test": "echo \"No test specified\" && exit 0",
     "build-pwa": "quasar build -m pwa",
     "build": "npm run prepare && npm run build-pwa && npm run build-capacitor && npm run sign-apk && npm run optimize-apk && npm run export",
+    "build-web": "npm run prepare && npm run build-pwa && npm run export",
     "export": "rm -f spa.zip && if [[ $OSTYPE == msys ]]; then npm run zip-windows; else npm run zip-macos; fi",
     "zip-macos": "ditto -c -k --sequesterRsrc --keepParent dist/pwa spa.zip",
     "zip-windows": "cd dist && zip -r ../spa.zip ./spa && cd ../",

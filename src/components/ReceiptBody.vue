@@ -7,7 +7,9 @@
       flat
       dense
     >
-      <thead :style="{ backgroundColor: user?.setting?.table_color }">
+      <thead
+        :style="{ backgroundColor: user?.setting?.table_color ?? 'black' }"
+      >
         <tr>
           <th class="text-left number-column">{{ $t("no.") }}</th>
           <th class="text-left">{{ $t("name") }}</th>
@@ -20,27 +22,27 @@
         <tr v-for="item in items" :key="item.key" @click="fillItem(item)">
           <td
             class="text-left number-column"
-            :style="{ borderColor: user?.setting?.table_color }"
+            :style="{ borderColor: user?.setting?.table_color ?? 'black' }"
           >
             {{ item.key }}
           </td>
 
           <td
             class="text-left"
-            :style="{ borderColor: user?.setting?.table_color }"
+            :style="{ borderColor: user?.setting?.table_color ?? 'black' }"
           >
             {{ item.name }}
           </td>
 
           <td
             class="text-right"
-            :style="{ borderColor: user?.setting?.table_color }"
+            :style="{ borderColor: user?.setting?.table_color ?? 'black' }"
           >
             {{ item.quantity }}
           </td>
           <td
             class="text-right"
-            :style="{ borderColor: user?.setting?.table_color }"
+            :style="{ borderColor: user?.setting?.table_color ?? 'black' }"
           >
             <span v-if="item.price">
               {{ formatCurrency(item.price) }}
@@ -48,7 +50,7 @@
           </td>
           <td
             class="text-right"
-            :style="{ borderColor: user?.setting?.table_color }"
+            :style="{ borderColor: user?.setting?.table_color ?? 'black' }"
           >
             <span v-if="item.quantity * item.price">
               {{ formatCurrency(item.quantity * item.price) }}
