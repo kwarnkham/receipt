@@ -9,4 +9,5 @@ export default {
   subscription: "Subscription",
   logout: "Logout",
   doYouWantToLogout: "Do you want to logout?",
+  download: "Download",
 };
