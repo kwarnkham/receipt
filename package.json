@@ -15,7 +15,7 @@
     "build-web": "npm run prepare-build && npm run build-pwa && npm run export",
     "export": "rm -f spa.zip && if [[ $OSTYPE == msys ]]; then npm run zip-windows; else npm run zip-macos; fi",
     "zip-macos": "ditto -c -k --sequesterRsrc --keepParent dist/pwa spa.zip",
-    "zip-windows": "cd dist && zip -r ../spa.zip ./spa && cd ../",
+    "zip-windows": "cd dist && zip -r ../spa.zip ./pwa && cd ../",
     "build-capacitor": "quasar build -m capacitor -T android",
     "sign-apk": "jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore receipt-release-key.keystore dist/capacitor/android/apk/release/app-release-unsigned.apk MOON -storepass ninjasaga",
     "optimize-apk": "rm -f *.apk && zipalign -v 4 dist/capacitor/android/apk/release/app-release-unsigned.apk PhoneVoucherV$version.apk",
