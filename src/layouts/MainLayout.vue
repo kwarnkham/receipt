@@ -115,10 +115,9 @@ import { useUserStore } from "src/stores/user";
 import useApp from "src/composables/app";
 import LanguageSwitcher from "src/components/LanguageSwitcher.vue";
 import useBackend from "src/composables/backend";
-import domtoimage from "dom-to-image";
+
 const { children } = routes[0];
 const { isAdmin, getImage, callNumber } = useApp();
-const { uploadImageForPrinting } = useBackend();
 const leftDrawerOpen = ref(false);
 const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value;
