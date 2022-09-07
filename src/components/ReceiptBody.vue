@@ -77,7 +77,6 @@
 import { useQuasar } from "quasar";
 import useUtility from "src/composables/utility";
 import ItemFormDialog from "src/components/ItemFormDialog";
-import { useUserStore } from "src/stores/user";
 
 const props = defineProps({
   items: {

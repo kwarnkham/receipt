@@ -43,7 +43,7 @@ const version = process.env.APP_VERSION;
 const downloadApp = () => {
   if (!canDownload.value) return;
   window.open(
-    process.env.ASSET_URL +
+    process.env.ASSETS_URL +
       "/apk/PhoneVoucherV" +
       process.env.APP_VERSION +
       ".apk"

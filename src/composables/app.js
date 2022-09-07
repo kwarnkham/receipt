@@ -41,7 +41,7 @@ export default function useApp() {
     },
     getImage: (name) => {
       if (!name) return;
-      return process.env.ASSET_URL + "/" + name;
+      return process.env.ASSETS_URL + "/" + name;
     },
     parseOrderStatus: (status) => {
       status = Number(status);
