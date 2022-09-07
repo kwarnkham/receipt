@@ -94,9 +94,8 @@ const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
 const filled = computed(
   () =>
     name.value &&
-    price.value &&
+    Number(price.value) >= 0 &&
     quantity.value &&
-    Number(price.value) &&
     Number(quantity.value)
 );
 function onOKClick() {

@@ -92,7 +92,7 @@ const props = defineProps({
     type: Object,
   },
 });
-const userStore = useUserStore();
+
 const emit = defineEmits(["addRow", "itemFilled"]);
 
 const { formatCurrency } = useUtility();
