@@ -19,7 +19,8 @@
     "build-capacitor": "quasar build -m capacitor -T android",
     "sign-apk": "jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore receipt-release-key.keystore dist/capacitor/android/apk/release/app-release-unsigned.apk MOON -storepass ninjasaga",
     "optimize-apk": "rm -f *.apk && zipalign -v 4 dist/capacitor/android/apk/release/app-release-unsigned.apk PhoneVoucherV$version.apk",
-    "prepare-build": "quasar clean && cp .env.production .env"
+    "prepare-build": "quasar clean && cp .env.production .env",
+    "dev-android": "cp .env.production .env && quasar dev -m capacitor -T android"
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
