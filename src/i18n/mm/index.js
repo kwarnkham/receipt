@@ -19,4 +19,6 @@ export default {
   deposit: "Deposit",
   discount: "Discount",
   grandTotal: "Grand Total",
+  downloadAllReceiptsData: "ဘောင်ချာအချက်အလက်အားလုံး ‌‌‌ဒေါင်းလုပ်ဆွဲမယ်",
+  onlyOncePerDay: "တစ်ရက် တစ်ကြိမ်သာ"
 };

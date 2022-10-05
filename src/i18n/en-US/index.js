@@ -19,4 +19,6 @@ export default {
   deposit: "Deposit",
   discount: "Discount",
   grandTotal: "Grand Total",
+  downloadAllReceiptsData: "Dwonload all receipts data",
+  onlyOncePerDay: "Only once per day"
 };

@@ -1,8 +1,8 @@
-import { useQuasar } from "quasar";
+import { useQuasar, date } from "quasar";
 import { api } from "src/boot/axios";
 import { useUserStore } from "src/stores/user";
-
-export default function useApp() {
+const { formatDate } = date;
+export default function useApp () {
   const { notify, localStorage, platform } = useQuasar();
   const userStore = useUserStore();
 
@@ -81,5 +81,88 @@ export default function useApp() {
       if (platform.is.ios) window.open("fb://profile/" + id);
       else window.open("fb://page/" + id, "_self");
     },
+    downloadCSV: (data, fileName) => {
+      data = data.map(e => {
+        e.items = e.items.map(item => {
+          item.price = item.pivot.price
+          item.quantity = item.pivot.quantity
+          item.amount = item.price * item.quantity;
+          return item;
+        })
+        e.date = formatDate(e.date, "DD-MM-YYYY")
+        e.total = e.items.reduce((carry, item) => carry + item.pivot.price, 0)
+        e.grand_total = e.total - (Number(e.deposit) + Number(e.discount))
+        return e;
+      })
+
+      const toCsvReadyArray = (data, keys) => [
+        keys.map(e => e.split('_').map(e => e.charAt(0).toUpperCase() + e.slice(1)).join(' ')),
+        ...(data.map(el => keys.map(key => el[key])).map(e => e.map(el => el ?? '""')))
+      ]
+
+      const toReadyCsvContent = (data, keys) => {
+        data = toCsvReadyArray(data, keys).map(e => e.map(el => {
+          if (Array.isArray(el)) {
+            return toCsvReadyArray(el, ['name', 'price', 'quantity', 'amount'])
+          } else {
+            return el
+          }
+        }))
+        let temp = '';
+        data.forEach(e => {
+          e.forEach((el, index) => {
+            if (Array.isArray(el)) {
+              el.forEach((element, key) => {
+                if (key > 0)
+                  for (let i = 0; i < index; i++) {
+                    temp += '"",'
+                  }
+                element.forEach((item, key) => {
+                  temp += item;
+                  if (key + 1 == element.length) temp += '\n';
+                  else temp += ','
+                })
+              })
+            } else {
+              temp += el;
+            }
+            if (index + 1 < e.length)
+              temp += ',';
+            else temp += '\n'
+          })
+        })
+        // data.forEach(function(infoArray, index) {
+        //   dataString = infoArray.join(';');
+        //   csvContent += index < data.length ? dataString + '\n' : dataString;
+        // });
+        return temp
+      };
+
+
+
+      // const keys = ['code', 'customer_name', 'customer_phone', 'customer_address', 'date', 'deposit', 'discount', 'items'];
+      // const heading = keys.map(e => e.split('_').map(e => e.charAt(0).toUpperCase() + e.slice(1)).join(' '))
+      // keys.map(key => data[0][key])
+
+      const content = toReadyCsvContent(data, ['code', 'customer_name', 'customer_phone', 'customer_address', 'date', 'deposit', 'discount', 'total', 'grand_total', 'items']);
+      const a = document.createElement('a');
+      const mimeType = 'text/csv;encoding:utf-8';
+      if (navigator.msSaveBlob) { // IE10
+        navigator.msSaveBlob(new Blob([content], {
+          type: mimeType
+        }), fileName);
+      } else if (URL && 'download' in a) { //html5 A[download]
+        a.href = URL.createObjectURL(new Blob([content], {
+          type: mimeType
+        }));
+        a.setAttribute('download', fileName);
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
+      // else {
+      //   location.href = 'data:application/octet-stream,' + encodeURIComponent(content); // only this mime type is supported
+      // }
+    }
   };
 }

@@ -2,7 +2,7 @@ import { api } from "src/boot/axios";
 import useHandleResponse from "./handleResponse";
 import useUtility from "./utility";
 
-export default function useBackend() {
+export default function useBackend () {
   const handleResponse = useHandleResponse();
   const { buildForm, removeFalsyProperty } = useUtility();
   return {
@@ -209,6 +209,16 @@ export default function useBackend() {
           method: "GET",
           url: "receipt",
           params: removeFalsyProperty(params),
+        }).then(({ data }) => data);
+      } catch (error) {
+        handleResponse(error);
+      }
+    },
+    fetchAllReceipts: async () => {
+      try {
+        return await api({
+          method: "GET",
+          url: "receipt/all",
         }).then(({ data }) => data);
       } catch (error) {
         handleResponse(error);

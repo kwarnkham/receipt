@@ -1,6 +1,6 @@
 import useApp from "./app";
-export default function useHandleResponse() {
-  const { errorNotify } = useApp();
+export default function useHandleResponse () {
+  const { errorNotify, infoNotify } = useApp();
   const defaultMessage =
     "Opps! Something went wrong. Please contact the system developer.";
   const handleResponse = (e) => {
@@ -14,6 +14,8 @@ export default function useHandleResponse() {
       errorNotify(message);
     } else if (e.response?.status == 401) {
       errorNotify("Mobile and password doesn't match");
+    } else if (e.response?.status == 429) {
+      return;
     } else if (e.response?.status == 403) {
       if (e.response?.data?.message) errorNotify(e.response.data.message);
       else
