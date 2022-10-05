@@ -48,17 +48,11 @@
             )
           }}
         </div>
-        <div>
+        <div v-if="user.latest_subscription.remaining_duration >= 0">
           Remaining Days:
-          {{
-            getDateDiff(
-              addToDate(user.latest_subscription.created_at, {
-                days: user.latest_subscription.duration,
-              }),
-              user.latest_subscription.created_at
-            )
-          }}
+          {{ user.latest_subscription.remaining_duration }}
         </div>
+        <div v-else>Expired</div>
       </div>
     </q-expansion-item>
     <q-expansion-item expand-separator label="Information">

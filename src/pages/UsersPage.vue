@@ -28,7 +28,11 @@
           },
         }"
       >
-        <q-item-section>
+        <q-item-section
+          :class="{
+            'text-red': user.latest_subscription.remaining_duration < 0,
+          }"
+        >
           {{ user.name ?? user.mobile }}
         </q-item-section>
       </q-item>
@@ -51,7 +55,7 @@ const { pageOptions } = useUtility();
 const router = useRouter();
 const params = ref({
   role: "user",
-  per_page: 40,
+  per_page: 20,
   name: "",
   mobile: "",
 });

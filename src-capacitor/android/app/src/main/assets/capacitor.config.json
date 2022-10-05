@@ -3,8 +3,5 @@
 	"appName": "Phone Voucher",
 	"bundledWebRuntime": false,
 	"npmClient": "npm",
-	"webDir": "www",
-	"server": {
-		"url": "http://192.168.1.14:8080"
-	}
+	"webDir": "www"
 }

@@ -42,12 +42,7 @@ const { t } = useI18n();
 const version = process.env.APP_VERSION;
 const downloadApp = () => {
   if (!canDownload.value) return;
-  window.open(
-    process.env.ASSETS_URL +
-      "/apk/PhoneVoucherV" +
-      process.env.APP_VERSION +
-      ".apk"
-  );
+  window.open(process.env.ASSETS_URL + "/apk/PhoneVoucherV" + version + ".apk");
 };
 const canDownload = computed(
   () => ["spa", "pwa"].includes(process.env.MODE) && platform.is.android

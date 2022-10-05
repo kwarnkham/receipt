@@ -50,6 +50,7 @@
         />
       </div>
     </q-form>
+    <div class="text-grey-6 fixed-bottom-right q-px-sm">{{ version }}</div>
   </q-page>
 </template>
 
@@ -66,6 +67,7 @@ const { loading, localStorage } = useQuasar();
 const { login, fetchKnownItems, fetchKnownUsers } = useBackend();
 const { preserveToken, getImage } = useApp();
 const router = useRouter();
+const version = process.env.APP_VERSION;
 const submit = () => {
   loading.show();
   login({
