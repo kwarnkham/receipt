@@ -82,15 +82,24 @@ export default function useApp () {
       else window.open("fb://page/" + id, "_self");
     },
     downloadCSV: (data, fileName) => {
+      const replaceCommaWithSpace = (dataObject) => {
+        Object.keys(dataObject).forEach(key => {
+          if (typeof dataObject[key] === 'string') {
+            dataObject[key] = dataObject[key].replaceAll(',', ' ')
+          }
+        })
+      }
       data = data.map(e => {
         e.items = e.items.map(item => {
           item.price = item.pivot.price
           item.quantity = item.pivot.quantity
           item.amount = item.price * item.quantity;
+          replaceCommaWithSpace(item)
           return item;
         })
+        replaceCommaWithSpace(e)
         e.date = formatDate(e.date, "DD-MM-YYYY")
-        e.total = e.items.reduce((carry, item) => carry + item.pivot.price, 0)
+        e.total = e.items.reduce((carry, item) => carry + item.amount, 0)
         e.grand_total = e.total - (Number(e.deposit) + Number(e.discount))
         return e;
       })

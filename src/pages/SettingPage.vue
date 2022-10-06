@@ -79,7 +79,7 @@ const downloadAllReceipts = () => {
 };
 const logout = () => {
   dialog({
-    title: t("Do you want to logout?"),
+    title: t("doYouWantToLogout"),
   }).onOk(() => {
     const user = userStore.getUser;
     localStorage.remove(user.id + "knownUsers");

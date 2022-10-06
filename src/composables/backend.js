@@ -224,5 +224,15 @@ export default function useBackend () {
         handleResponse(error);
       }
     },
+    fetchAllReceiptsOfUser: async (user_id) => {
+      try {
+        return await api({
+          method: "GET",
+          url: "receipt/all/" + user_id,
+        }).then(({ data }) => data);
+      } catch (error) {
+        handleResponse(error);
+      }
+    },
   };
 }

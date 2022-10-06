@@ -208,6 +208,15 @@
           @click="resetPassword"
         />
       </div>
+      <div>
+        <q-btn
+          :label="'Download Receipts'"
+          color="teal"
+          no-caps
+          outline
+          @click="downloadReceipts"
+        />
+      </div>
     </div>
   </q-page>
 </template>
@@ -233,10 +242,11 @@ const {
   subscribeUser,
   resetUserPassword,
   setSetting,
+  fetchAllReceiptsOfUser,
 } = useBackend();
 const route = useRoute();
 const { loading, dialog } = useQuasar();
-const { getImage, successNotify } = useApp();
+const { getImage, successNotify, downloadCSV } = useApp();
 const logo = ref([]);
 const background = ref([]);
 const payments = ref([]);
@@ -348,6 +358,14 @@ const subscribe = () => {
       .finally(() => {
         loading.hide();
       });
+  });
+};
+
+const downloadReceipts = () => {
+  fetchAllReceiptsOfUser(user.value.id).then((receipts) => {
+    if (receipts) {
+      downloadCSV(receipts, user.value.name);
+    }
   });
 };
 const changeUserInfo = (field) => {
