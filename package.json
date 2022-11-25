@@ -27,6 +27,7 @@
     "axios": "^0.21.1",
     "browser-image-compression": "^2.0.0",
     "core-js": "^3.6.5",
+    "dom-to-image": "^2.6.0",
     "dotenv": "^16.0.1",
     "mitt": "^3.0.0",
     "pinia": "^2.0.11",

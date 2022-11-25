@@ -38,13 +38,15 @@ import useUtility from "src/composables/utility";
 import useBackend from "src/composables/backend";
 import { emitter } from "src/boot/eventEmitter";
 import useApp from "src/composables/app";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import ReceiptHeader from "../components/ReceiptHeader.vue";
 import ReceiptBody from "src/components/ReceiptBody.vue";
 import ReceiptSummery from "src/components/ReceiptSummery.vue";
 import { useUserStore } from "src/stores/user";
+import PrintViewDialog from "src/components/PrintViewDialog.vue";
 const { getDateDiff, formatDate, addToDate } = date;
 
+const router = useRouter();
 const { loading, localStorage } = useQuasar();
 const { pageOptions } = useUtility();
 const { createReceipt, findReceipt } = useBackend();
@@ -58,6 +60,8 @@ const userStore = useUserStore();
 const subscription = userStore.getUser.latest_subscription;
 const viewedAsUser = ref(null);
 const user = computed(() => viewedAsUser.value ?? userStore.getUser);
+
+const { dialog } = useQuasar();
 const addRow = () => {
   items.value.push({
     key: items.value.length + 1,
@@ -94,6 +98,7 @@ const submit = () => {
       preserveItems();
       preserveUsers();
       successNotify("Success", { timeout: 500 });
+      router.push({ name: "receipt", params: { id: data.id } });
     })
     .finally(() => {
       loading.hide();
@@ -167,15 +172,15 @@ const items = ref(
 const orderItems = computed(() =>
   items.value.filter((e) => e.name && e.price && e.quantity)
 );
-const resetData = () => {
-  receipt.value = null;
-  items.value = [...Array(10).keys()].map((e) => ({
-    key: e + 1,
-    name: "",
-    quantity: "",
-    price: "",
-  }));
-};
+// const resetData = () => {
+//   receipt.value = null;
+//   items.value = [...Array(10).keys()].map((e) => ({
+//     key: e + 1,
+//     name: "",
+//     quantity: "",
+//     price: "",
+//   }));
+// };
 
 const notifyUserNearExpiration = () => {
   if (isAdmin(userStore.getUser)) return;
@@ -196,6 +201,15 @@ const notifyUserNearExpiration = () => {
       localStorage.set("lastNotified", now);
     }
   }
+};
+
+const showPrintView = () => {
+  dialog({
+    component: PrintViewDialog,
+    componentProps: {
+      receipt: receipt.value,
+    },
+  });
 };
 
 onMounted(() => {
@@ -227,11 +241,13 @@ onMounted(() => {
   }
 
   emitter.on("createReceipt", submit);
-  emitter.on("addNewReceipt", resetData);
+  // emitter.on("addNewReceipt", resetData);
+  emitter.on("print", showPrintView);
 });
 onBeforeUnmount(() => {
   emitter.off("createReceipt", submit);
-  emitter.off("addNewReceipt", resetData);
+  // emitter.off("addNewReceipt", resetData);
+  emitter.on("print", showPrintView);
 });
 </script>
 

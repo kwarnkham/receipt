@@ -127,16 +127,16 @@ defineExpose({
   deposit,
   discount,
 });
-const resetData = () => {
-  deposit.value = "";
-  discount.value = "";
-};
+// const resetData = () => {
+//   deposit.value = "";
+//   discount.value = "";
+// };
 onMounted(() => {
-  emitter.on("addNewReceipt", resetData);
+  // emitter.on("addNewReceipt", resetData);
 });
 
 onBeforeUnmount(() => {
-  emitter.off("addNewReceipt", resetData);
+  // emitter.off("addNewReceipt", resetData);
 });
 </script>
 

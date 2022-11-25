@@ -60,20 +60,24 @@
               v-if="$route.name == 'createReceipt' || $route.name == 'receipt'"
             >
               <q-menu max-width="57px" auto-close>
+                <template v-if="$route.name == 'receipt'">
+                  <q-btn
+                    icon="add"
+                    flat
+                    @click="$router.replace({ name: 'createReceipt' })"
+                  />
+                  <q-btn
+                    icon="screenshot"
+                    flat
+                    @click="hideHeaderAndFooterForScreenshot"
+                  />
+                  <q-btn icon="print" flat @click="$emitter.emit('print')" />
+                </template>
                 <q-btn
+                  v-else
                   icon="save"
                   flat
                   @click="$emitter.emit('createReceipt')"
-                />
-                <q-btn
-                  icon="add"
-                  flat
-                  @click="$emitter.emit('addNewReceipt')"
-                />
-                <q-btn
-                  icon="screenshot"
-                  flat
-                  @click="hideHeaderAndFooterForScreenshot"
                 />
               </q-menu>
             </q-btn>
@@ -103,7 +107,7 @@
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <router-view :key="$route.name" />
     </q-page-container>
   </q-layout>
 </template>
@@ -114,7 +118,6 @@ import routes from "src/router/routes";
 import { useUserStore } from "src/stores/user";
 import useApp from "src/composables/app";
 import LanguageSwitcher from "src/components/LanguageSwitcher.vue";
-import useBackend from "src/composables/backend";
 
 const { children } = routes[0];
 const { isAdmin, getImage, callNumber } = useApp();
@@ -131,6 +134,7 @@ const hideHeaderAndFooterForScreenshot = () => {
     takingSS.value = false;
   }, 3000);
 };
+
 const links = computed(() =>
   children.filter((e) => {
     if (userStore.getUser) return e.name != "login" && e.meta.label;
