@@ -1,9 +1,21 @@
 import domtoimage from "dom-to-image";
 import { ref } from "vue";
 
-export default function usePrinter (width = 360, height = 26) {
+export default function usePrinter (width = 360) {
+  const height = ref(0)
   const printCharacteristic = ref(null)
+
+  const sendTextData = (input) => {
+    // Get the bytes for the text
+    const encoder = new TextEncoder("utf-8");
+    // Add line feed + carriage return chars to text
+    const text = encoder.encode(input + '\u000A\u000D');
+    return printCharacteristic.value.writeValue(text).then(() => {
+      console.log('Write done.');
+    });
+  }
   const generateImageData = async (node) => {
+    height.value = node.clientHeight;
     const dataUrl = await domtoimage.toPng(node)
 
     const printTarget = new Image();
@@ -13,7 +25,7 @@ export default function usePrinter (width = 360, height = 26) {
     const canvas = document.createElement("canvas");
     // Canvas dimensions need to be a multiple of 40 for this printer
     canvas.width = width;
-    canvas.height = height;
+    canvas.height = height.value;
     const context = canvas.getContext("2d");
     context.drawImage(printTarget, 0, 0, canvas.width, canvas.height);
     return context.getImageData(
@@ -36,7 +48,7 @@ export default function usePrinter (width = 360, height = 26) {
       return new Uint8Array([]);
     }
     // Each 8 pixels in a row is represented by a byte
-    let printData = new Uint8Array((width / 8) * height + 8);
+    let printData = new Uint8Array((width / 8) * height.value + 8);
     // Set the header bytes for printing the image
     printData[0] = 29; // Print raster bitmap
     printData[1] = 118; // Print raster bitmap
@@ -44,11 +56,11 @@ export default function usePrinter (width = 360, height = 26) {
     printData[3] = 0; // Normal 203.2 DPI
     printData[4] = width / 8; // Number of horizontal data bits (LSB)
     printData[5] = 0; // Number of horizontal data bits (MSB)
-    printData[6] = height % 256; // Number of vertical data bits (LSB)
-    printData[7] = height / 256; // Number of vertical data bits (MSB)
+    printData[6] = height.value % 256; // Number of vertical data bits (LSB)
+    printData[7] = height.value / 256; // Number of vertical data bits (MSB)
     let offset = 7;
     // Loop through image rows in bytes
-    for (let i = 0; i < height; ++i) {
+    for (let i = 0; i < height.value; ++i) {
       for (let k = 0; k < width / 8; ++k) {
         let k8 = k * 8;
         //  Pixel to bit position mapping
@@ -66,6 +78,7 @@ export default function usePrinter (width = 360, height = 26) {
     return printData;
   }
   const sendImageData = async (node) => {
+    // await sendTextData('ok ok Moon')
     const imageData = await generateImageData(node)
     let index = 0;
     let imagePrintData = getImagePrintData(imageData);
@@ -136,7 +149,8 @@ export default function usePrinter (width = 360, height = 26) {
     getDarkPixel,
     getImagePrintData,
     sendImageData,
-    sendPrinterData
+    sendPrinterData,
+    sendTextData
   }
 }
 
