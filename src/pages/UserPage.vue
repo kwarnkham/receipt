@@ -141,6 +141,52 @@
           />
         </div>
       </q-img>
+      <q-img
+        :src="getImage(receiptLogoPicture?.name)"
+        alt="receipt-logo"
+        class="q-mt-sm"
+      >
+        <div class="absolute-bottom">Receipt Logo</div>
+        <PicturesSelector v-model="receiptLogo">
+          <template #showSelectedPictures="{ showPicturesToUpload }">
+            <q-btn
+              no-caps
+              outline
+              color="accent"
+              icon="visibility"
+              @click="showPicturesToUpload"
+            />
+          </template>
+          <template #deleteSelectedPictures="{ clearChosenImages }">
+            <q-btn
+              no-caps
+              outline
+              color="negative"
+              icon="delete"
+              @click="clearChosenImages"
+            />
+          </template>
+          <template #imagePicker="{ chooseImages }">
+            <q-btn
+              color="indigo"
+              @click="chooseImages"
+              no-caps
+              :label="'Add Receipt logo'"
+            />
+          </template>
+          <!-- <template #upload>
+          <q-btn color="primary" @click="upload" no-caps icon="upload" />
+        </template> -->
+        </PicturesSelector>
+        <div class="absolute-top-right">
+          <q-btn
+            icon="save"
+            color="primary"
+            @click="savePicture(3)"
+            :disabled="!receiptLogo.length"
+          />
+        </div>
+      </q-img>
     </q-expansion-item>
     <q-expansion-item expand-separator label="Background">
       <q-img :src="getImage(backgroundPicture?.name)" alt="baclground">
@@ -248,6 +294,7 @@ const route = useRoute();
 const { loading, dialog } = useQuasar();
 const { getImage, successNotify, downloadCSV } = useApp();
 const logo = ref([]);
+const receiptLogo = ref([]);
 const background = ref([]);
 const payments = ref([]);
 const accountName = ref("");
@@ -256,6 +303,9 @@ const tableColor = ref("");
 const selectedPayment = ref(null);
 const logoPicture = computed(() =>
   user.value?.pictures.find((e) => e.type == 1)
+);
+const receiptLogoPicture = computed(() =>
+  user.value?.pictures.find((e) => e.type == 3)
 );
 
 const setTableColor = () => {
@@ -407,12 +457,18 @@ const resetPassword = () => {
 };
 
 const savePicture = (type) => {
-  if (![1, 2].includes(type)) return;
+  if (![1, 2, 3].includes(type)) return;
   if (type == 1 && logo.value.length == 0) return;
   if (type == 2 && background.value.length == 0) return;
+  if (type == 3 && receiptLogo.value.length == 0) return;
   loading.show();
+  const pictures = {
+    1: logo.value[0],
+    2: background.value[0],
+    3: receiptLogo.value[0],
+  };
   createPicture({
-    picture: type == 1 ? logo.value[0] : background.value[0],
+    picture: pictures[type],
     user_id: user.value.id,
     type,
   })
@@ -420,7 +476,10 @@ const savePicture = (type) => {
       const index = user.value.pictures.findIndex((e) => e.type == data.type);
       if (index >= 0) user.value.pictures[index] = data;
       else user.value.pictures.push(data);
+
       logo.value = [];
+      background.value = [];
+      receiptLogo.value = [];
     })
     .finally(() => {
       loading.hide();

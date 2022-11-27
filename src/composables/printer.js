@@ -6,13 +6,18 @@ export default function usePrinter (width = 360) {
   const printCharacteristic = ref(null)
 
   const sendTextData = (input) => {
-    // Get the bytes for the text
-    const encoder = new TextEncoder("utf-8");
-    // Add line feed + carriage return chars to text
-    const text = encoder.encode(input + '\u000A\u000D');
-    return printCharacteristic.value.writeValue(text).then(() => {
-      console.log('Write done.');
-    });
+    return new Promise((resolve, reject) => {
+      // Get the bytes for the text
+      const encoder = new TextEncoder("utf-8");
+      // Add line feed + carriage return chars to text
+      const text = encoder.encode(input + '\u000A\u000D');
+      printCharacteristic.value.writeValue(text).then(() => {
+        resolve()
+      }).catch(() => {
+        printCharacteristic.value = null
+        reject()
+      });
+    })
   }
   const generateImageData = async (node) => {
     height.value = node.clientHeight;
@@ -78,22 +83,28 @@ export default function usePrinter (width = 360) {
     return printData;
   }
   const sendImageData = async (node) => {
-    // await sendTextData('ok ok Moon')
     const imageData = await generateImageData(node)
     let index = 0;
     let imagePrintData = getImagePrintData(imageData);
     const sendNextImageDataBatch = async (resolve, reject) => {
-      // Can only write 512 bytes at a time to the characteristic
-      // Need to send the image data in 512 byte batches
-      if (index + 512 < imagePrintData.length) {
-        await printCharacteristic.value.writeValue(imagePrintData.slice(index, index + 512))
-        index += 512;
+      const max = 512 / 2;
+      if (index + max < imagePrintData.length) {
+        try {
+          await printCharacteristic.value.writeValue(imagePrintData.slice(index, index + max))
+        } catch (error) {
+          printCharacteristic.value = null
+        }
+        index += max;
         sendNextImageDataBatch(resolve, reject);
       } else {
         // Send the last bytes
         if (index < imagePrintData.length) {
-          await printCharacteristic.value
-            .writeValue(imagePrintData.slice(index, imagePrintData.length))
+          try {
+            await printCharacteristic.value
+              .writeValue(imagePrintData.slice(index, imagePrintData.length))
+          } catch (error) {
+            printCharacteristic.value = null
+          }
           resolve();
         } else {
           resolve();
