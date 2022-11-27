@@ -1,25 +1,48 @@
 <template>
   <q-dialog ref="dialogRef" @hide="onDialogHide" persistent maximized>
     <q-card class="column items-center">
-      <div class="row justify-evenly">
-        <q-btn icon="print" @click="print"></q-btn>
-        <q-btn icon="close" @click="onDialogHide"></q-btn>
-      </div>
-      <div class="receipt bg-transparent">
-        <div class="row justify-between">
-          <div>{{ receipt.code }}</div>
-          <div>{{ formatDate(receipt.date, "DD-MM-YYYY") }}</div>
+      <div class="receipt text-grey-10 column justify-start" id="print-target">
+        <img :src="getImage(logo)" alt="receipt" width="360" v-if="logo" />
+        <div
+          class="row justify-between font-weight-bolder text-h6"
+          v-if="receipt.user.phones?.length"
+        >
+          <div v-for="phone in receipt.user.phones" :key="phone.id">
+            <q-icon name="phone" /> {{ phone.number }}
+          </div>
         </div>
+
+        <div
+          class="row justify-between"
+          :class="{ 'q-mt-sm border-top': receipt.user.phones?.length || logo }"
+        >
+          <div>
+            <q-icon name="person" class="q-mr-xs" />{{ receipt.customer_name }}
+          </div>
+          <div>
+            <q-icon name="phone_iphone" class="q-mr-xs" />{{
+              receipt.customer_phone
+            }}
+          </div>
+        </div>
+        <div class="row justify-between">
+          <div><q-icon name="receipt" class="q-mr-xs" />{{ receipt.code }}</div>
+          <div>
+            <q-icon name="calendar_month" class="q-mr-xs" />{{
+              formatDate(receipt.date, "DD-MM-YYYY")
+            }}
+          </div>
+        </div>
+
         <q-markup-table
           wrap-cells
           flat
           dense
           separator="none"
-          id="print-target"
+          class="bg-transparent text-grey-10 full-width"
         >
           <thead>
             <tr>
-              <th class="text-left number-column">{{ $t("no.") }}</th>
               <th class="text-left">{{ $t("name") }}</th>
               <th class="text-right">{{ $t("qty") }}</th>
               <th class="text-right">{{ $t("price") }}</th>
@@ -27,11 +50,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="item in receipt.items" :key="item.key">
-              <td class="text-left number-column">
-                {{ item.key }}
-              </td>
-
+            <tr v-for="item in receipt.items" :key="item.id">
               <td class="text-left">
                 {{ item.name }}
               </td>
@@ -40,43 +59,51 @@
                 {{ item.quantity }}
               </td>
               <td class="text-right">
-                <span v-if="item.price">
+                <template v-if="item.price">
                   {{ formatCurrency(item.price) }}
-                </span>
+                </template>
               </td>
               <td class="text-right">
-                <span v-if="item.quantity * item.price">
+                <template v-if="item.quantity * item.price">
                   {{ formatCurrency(item.quantity * item.price) }}
-                </span>
+                </template>
               </td>
             </tr>
             <tr class="summery">
-              <td colspan="4" class="text-right">Total</td>
+              <td colspan="3" class="text-right">Total</td>
               <td class="text-right">
-                <span>{{ formatCurrency(total) }}</span>
+                {{ formatCurrency(total) }}
               </td>
             </tr>
             <tr>
-              <td colspan="4" class="text-right">Deposit</td>
+              <td colspan="3" class="text-right">Deposit</td>
               <td class="text-right">
-                <span>{{ formatCurrency(receipt.deposit) }}</span>
+                {{ formatCurrency(receipt.deposit) }}
               </td>
             </tr>
             <tr>
-              <td colspan="4" class="text-right">Discount</td>
+              <td colspan="3" class="text-right">Discount</td>
               <td class="text-right">
-                <span>{{ formatCurrency(receipt.discount) }}</span>
+                {{ formatCurrency(receipt.discount) }}
               </td>
             </tr>
-            <tr>
-              <td colspan="4" class="text-right">Grand Total</td>
-              <td class="text-right">
-                <span>{{ formatCurrency(grandTotal) }}</span>
+            <tr class="grand-total">
+              <td colspan="3" class="text-right text-weight-bolder">
+                Grand Total
+              </td>
+              <td class="text-right text-weight-bolder">
+                {{ formatCurrency(grandTotal) }}
               </td>
             </tr>
           </tbody>
         </q-markup-table>
+        <div class="text-overline flex row line-text q-mt-sm">Thank you</div>
       </div>
+      <div class="row justify-around full-width">
+        <q-btn icon="close" @click="onDialogHide"></q-btn>
+        <q-btn icon="print" @click="print"></q-btn>
+      </div>
+
       <div class="col"></div>
     </q-card>
   </q-dialog>
@@ -87,6 +114,7 @@ import { useDialogPluginComponent, date } from "quasar";
 import useUtility from "src/composables/utility";
 import { computed } from "vue";
 import usePrinter from "src/composables/printer";
+import useApp from "src/composables/app";
 
 const { formatDate } = date;
 const { formatCurrency } = useUtility();
@@ -96,12 +124,16 @@ const props = defineProps({
     required: true,
   },
 });
-
+const { getImage } = useApp();
 const total = computed(() =>
   props.receipt.items.reduce(
     (carry, item) => carry + item.pivot.price * item.pivot.quantity,
     0
   )
+);
+
+const logo = computed(
+  () => props.receipt.user.pictures.find((e) => e.type == 3)?.name
 );
 
 const grandTotal = computed(
@@ -112,7 +144,9 @@ const grandTotal = computed(
 );
 const { sendPrinterData } = usePrinter();
 const print = () => {
+  // generateImageData(document.getElementById("print-target"));
   sendPrinterData(document.getElementById("print-target"));
+  // sendPrinterData(document.getElementById("foo"));
 };
 
 defineEmits([
@@ -132,11 +166,42 @@ const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
 </script>
 
 <style lang="scss" scoped>
+.line-text:before,
+.line-text:after {
+  content: "";
+  flex: 1 1;
+  border-bottom: 1px dashed;
+  margin: auto;
+}
+.line-text:before {
+  margin-right: 1em;
+}
+.line-text:after {
+  margin-left: 1em;
+}
 .receipt {
   width: 360px;
 }
-thead > tr > th,
+.q-table tbody td,
+th {
+  font-size: 18px;
+}
+
+th,
 .summery > td {
-  border-bottom: 1px solid black;
+  border-top: 1px dashed $grey-10;
+  font-weight: normal;
+}
+
+th {
+  border-bottom: 1px dashed $grey-10;
+}
+
+.grand-total > td {
+  border-top: 1px dashed $grey-10;
+}
+
+.border-top {
+  border-top: 1px dashed $grey-10;
 }
 </style>
