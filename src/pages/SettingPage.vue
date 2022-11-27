@@ -6,6 +6,9 @@
         {{ $t("changePassword") }}
       </q-card-section>
     </q-card>
+    <q-card @click="$router.push({ name: 'receiptPhone' })">
+      <q-card-section> Receipt Phone </q-card-section>
+    </q-card>
     <q-card @click="$router.push({ name: 'subscription' })">
       <q-card-section>
         {{ $t("subscription") }}

@@ -234,5 +234,37 @@ export default function useBackend () {
         handleResponse(error);
       }
     },
+    createPhone: async (data) => {
+      try {
+        return await api({
+          method: "POST",
+          url: "phones",
+          data: data
+        }).then(({ data }) => data);
+      } catch (error) {
+        handleResponse(error);
+      }
+    },
+    updatePhone: async (phoneId, data) => {
+      try {
+        return await api({
+          method: "PUT",
+          url: "phones/" + phoneId,
+          data: data
+        }).then(({ data }) => data);
+      } catch (error) {
+        handleResponse(error);
+      }
+    },
+    deletePhone: async (phoneId) => {
+      try {
+        return await api({
+          method: "DELETE",
+          url: "phones/" + phoneId,
+        }).then(({ data }) => data);
+      } catch (error) {
+        handleResponse(error);
+      }
+    },
   };
 }

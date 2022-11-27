@@ -23,7 +23,7 @@
         autocomplete="new-password"
       />
       <div class="text-center">
-        <q-btn type="sumit" icon="save" />
+        <q-btn type="submit" icon="save" />
       </div>
     </q-form>
   </q-page>

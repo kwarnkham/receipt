@@ -104,6 +104,9 @@ module.exports = configure(function (ctx) {
           info: "#31CCEC",
           warning: "#F2C037",
         },
+        loading: {
+          delay: 400
+        }
       },
 
       // iconSet: 'material-icons', // Quasar icon set

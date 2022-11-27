@@ -22,6 +22,14 @@ const routes = [
         },
       },
       {
+        path: "receipt-phone",
+        component: () => import("pages/ReceiptPhone.vue"),
+        name: "receiptPhone",
+        meta: {
+          requireAuth: true,
+        },
+      },
+      {
         path: "receipt/:id",
         component: () => import("pages/CreateReceipt.vue"),
         name: "receipt",
