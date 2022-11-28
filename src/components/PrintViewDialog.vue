@@ -1,10 +1,7 @@
 <template>
   <q-dialog ref="dialogRef" @hide="onDialogHide" persistent maximized>
     <q-card class="column items-center">
-      <div
-        class="receipt text-grey-10 column justify-start items-center"
-        id="print-target"
-      >
+      <div class="receipt text-grey-10 column justify-start" id="print-target">
         <img :src="getImage(logo)" alt="receipt" width="360" v-if="logo" />
         <div
           class="row justify-between font-weight-bolder text-h6"
