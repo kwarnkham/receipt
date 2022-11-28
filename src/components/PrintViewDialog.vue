@@ -101,7 +101,7 @@
       </div>
       <div class="row justify-around full-width">
         <q-btn icon="close" @click="onDialogHide"></q-btn>
-        <q-btn icon="print" @click="print"></q-btn>
+        <q-btn icon="print" @click="print" :disabled="printing"></q-btn>
       </div>
 
       <div class="col"></div>
@@ -112,7 +112,7 @@
 <script setup>
 import { useDialogPluginComponent, date } from "quasar";
 import useUtility from "src/composables/utility";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import usePrinter from "src/composables/printer";
 import useApp from "src/composables/app";
 
@@ -136,6 +136,8 @@ const logo = computed(
   () => props.receipt.user.pictures.find((e) => e.type == 3)?.name
 );
 
+const printing = ref(false);
+
 const grandTotal = computed(
   () =>
     total.value -
@@ -144,8 +146,10 @@ const grandTotal = computed(
 );
 const { sendPrinterData } = usePrinter();
 const print = () => {
-  // generateImageData(document.getElementById("print-target"));
-  sendPrinterData(document.getElementById("print-target"));
+  printing.value = true;
+  sendPrinterData(document.getElementById("print-target")).finally(() => {
+    printing.value = false;
+  });
   // sendPrinterData(document.getElementById("foo"));
 };
 

@@ -171,7 +171,7 @@ module.exports = configure(function (ctx) {
 
       manifest: {
         name: `Phone Voucher`,
-        short_name: `PhV`,
+        short_name: `Phone Voucher`,
         description: `Phone Voucher, easy receipt on your palm.`,
         display: "standalone",
         orientation: "portrait",
