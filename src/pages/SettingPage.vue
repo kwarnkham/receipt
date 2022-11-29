@@ -24,13 +24,13 @@
         </span>
       </q-card-section>
     </q-card>
-    <q-card @click="downloadApp" v-if="canDownload">
+    <!-- <q-card @click="downloadApp" v-if="canDownload">
       <q-card-section>
         {{ $t("download") }}
         <q-icon name="android" size="xs" color="secondary" />
         <q-badge>v{{ version }} <q-icon name="download" /></q-badge>
       </q-card-section>
-    </q-card>
+    </q-card> -->
     <q-card @click="logout">
       <q-card-section>
         {{ $t("logout") }}
@@ -46,7 +46,6 @@ import LanguageSwitcher from "src/components/LanguageSwitcher.vue";
 import useApp from "src/composables/app";
 import useBackend from "src/composables/backend";
 import { useUserStore } from "src/stores/user";
-import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
@@ -56,14 +55,16 @@ const router = useRouter();
 const { t } = useI18n();
 const { infoNotify, downloadCSV } = useApp();
 const { fetchAllReceipts } = useBackend();
-const version = process.env.APP_VERSION;
-const downloadApp = () => {
-  if (!canDownload.value) return;
-  window.open(process.env.ASSETS_URL + "/apk/PhoneVoucherV" + version + ".apk");
-};
-const canDownload = computed(
-  () => ["spa", "pwa"].includes(process.env.MODE) && platform.is.android
-);
+
+// const version = process.env.APP_VERSION;
+// const downloadApp = () => {
+//   if (!canDownload.value) return;
+//   window.open(process.env.ASSETS_URL + "/apk/PhoneVoucherV" + version + ".apk");
+// };
+// const canDownload = computed(
+//   () => ["spa", "pwa"].includes(process.env.MODE) && platform.is.android
+// );
+
 const downloadAllReceipts = () => {
   loading.show();
   fetchAllReceipts()
