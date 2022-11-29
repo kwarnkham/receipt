@@ -1,6 +1,6 @@
 <template>
   <q-dialog ref="dialogRef" @hide="onDialogHide" persistent maximized>
-    <q-card class="column items-center">
+    <q-card class="column items-center no-wrap">
       <div class="receipt text-grey-10 column justify-start" id="print-target">
         <img :src="getImage(logo)" alt="receipt" width="360" v-if="logo" />
         <div
@@ -110,7 +110,7 @@
 </template>
 
 <script setup>
-import { useDialogPluginComponent, date } from "quasar";
+import { useDialogPluginComponent, date, useQuasar } from "quasar";
 import useUtility from "src/composables/utility";
 import { computed, ref } from "vue";
 import usePrinter from "src/composables/printer";
@@ -124,6 +124,7 @@ const props = defineProps({
     required: true,
   },
 });
+const { loading, notify } = useQuasar();
 const { getImage } = useApp();
 const total = computed(() =>
   props.receipt.items.reduce(
@@ -147,9 +148,15 @@ const grandTotal = computed(
 const { sendPrinterData } = usePrinter();
 const print = () => {
   printing.value = true;
-  sendPrinterData(document.getElementById("print-target")).finally(() => {
-    printing.value = false;
-  });
+  sendPrinterData(document.getElementById("print-target"))
+    .catch((error) => {
+      if (error) notify(error);
+      else notify("Printer has disconnected");
+    })
+    .finally(() => {
+      printing.value = false;
+      loading.hide();
+    });
   // sendPrinterData(document.getElementById("foo"));
 };
 

@@ -1,9 +1,12 @@
 import domtoimage from "dom-to-image";
+import { QSpinnerHourglass, useQuasar } from "quasar";
 import { ref } from "vue";
 
 export default function usePrinter (width = 360) {
   const height = ref(0)
   const printCharacteristic = ref(null)
+  const printId = 'print-this'
+  const { loading } = useQuasar()
 
   const sendTextData = (input) => {
     return new Promise((resolve, reject) => {
@@ -11,28 +14,39 @@ export default function usePrinter (width = 360) {
       const encoder = new TextEncoder("utf-8");
       // Add line feed + carriage return chars to text
       const text = encoder.encode(input + '\u000A\u000D');
+      if (!printCharacteristic.value) {
+        reject('no printer connected')
+      }
       printCharacteristic.value.writeValue(text).then(() => {
         resolve()
       }).catch(() => {
         printCharacteristic.value = null
-        reject()
+        reject('error writing data')
       });
     })
   }
   const generateImageData = async (node) => {
+    loading.show({
+      spinner: QSpinnerHourglass,
+      message: "Printing...",
+    });
     height.value = node.clientHeight;
     const dataUrl = await domtoimage.toPng(node)
 
     const printTarget = new Image();
     printTarget.src = dataUrl;
-
+    printTarget.id = printId;
+    document.body.appendChild(printTarget)
+    await new Promise((resolve) => {
+      setTimeout(resolve, 1000)
+    })
     // Use the canvas to get image data
     const canvas = document.createElement("canvas");
     // Canvas dimensions need to be a multiple of 40 for this printer
     canvas.width = width;
     canvas.height = height.value;
     const context = canvas.getContext("2d");
-    context.drawImage(printTarget, 0, 0, canvas.width, canvas.height);
+    context.drawImage(document.getElementById(printId), 0, 0, canvas.width, canvas.height);
     return context.getImageData(
       0,
       0,
@@ -90,9 +104,12 @@ export default function usePrinter (width = 360) {
       const max = 512 / 2;
       if (index + max < imagePrintData.length) {
         try {
+          if (!printCharacteristic.value) reject('no printer conneted')
           await printCharacteristic.value.writeValue(imagePrintData.slice(index, index + max))
         } catch (error) {
+          console.log(error)
           printCharacteristic.value = null
+          reject()
         }
         index += max;
         sendNextImageDataBatch(resolve, reject);
@@ -100,13 +117,22 @@ export default function usePrinter (width = 360) {
         // Send the last bytes
         if (index < imagePrintData.length) {
           try {
+            if (!printCharacteristic.value) reject('no printer conneted')
             await printCharacteristic.value
               .writeValue(imagePrintData.slice(index, imagePrintData.length))
           } catch (error) {
+            console.log(error)
             printCharacteristic.value = null
+            reject()
           }
+          await sendTextData('')
+          await sendTextData('')
+          document.getElementById(printId).remove()
           resolve();
         } else {
+          await sendTextData('')
+          await sendTextData('')
+          document.getElementById(printId).remove()
           resolve();
         }
       }
@@ -145,11 +171,19 @@ export default function usePrinter (width = 360) {
             printCharacteristic.value = characteristic
             sendImageData(node).then(() => {
               resolve()
+            }).catch(e => {
+              reject(e)
             });
+          })
+          .catch(e => {
+            console.log(e)
+            reject()
           })
       } else {
         sendImageData(node).then(() => {
           resolve()
+        }).catch(e => {
+          reject(e)
         });
       }
     })
