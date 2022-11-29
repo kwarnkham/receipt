@@ -247,7 +247,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   emitter.off("createReceipt", submit);
   // emitter.off("addNewReceipt", resetData);
-  emitter.on("print", showPrintView);
+  emitter.off("print", showPrintView);
 });
 </script>
 
