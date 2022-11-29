@@ -1,10 +1,10 @@
 import domtoimage from "dom-to-image";
 import { QSpinnerHourglass, useQuasar } from "quasar";
-import { ref } from "vue";
+import { inject, ref } from "vue";
 
 export default function usePrinter (width = 360) {
   const height = ref(0)
-  const printCharacteristic = ref(null)
+  const { printCharacteristic, setPrintCharacteristic } = inject('printer')
   const printId = 'print-this'
   const { loading } = useQuasar()
 
@@ -20,7 +20,7 @@ export default function usePrinter (width = 360) {
       printCharacteristic.value.writeValue(text).then(() => {
         resolve()
       }).catch(() => {
-        printCharacteristic.value = null
+        setPrintCharacteristic(null)
         reject('error writing data')
       });
     })
@@ -108,7 +108,7 @@ export default function usePrinter (width = 360) {
           await printCharacteristic.value.writeValue(imagePrintData.slice(index, index + max))
         } catch (error) {
           console.log(error)
-          printCharacteristic.value = null
+          setPrintCharacteristic(null)
           reject()
         }
         index += max;
@@ -122,7 +122,7 @@ export default function usePrinter (width = 360) {
               .writeValue(imagePrintData.slice(index, imagePrintData.length))
           } catch (error) {
             console.log(error)
-            printCharacteristic.value = null
+            setPrintCharacteristic(null)
             reject()
           }
           await sendTextData('')
@@ -168,7 +168,7 @@ export default function usePrinter (width = 360) {
           )
           .then((characteristic) => {
             // Cache the characteristic
-            printCharacteristic.value = characteristic
+            setPrintCharacteristic(characteristic)
             sendImageData(node).then(() => {
               resolve()
             }).catch(e => {
