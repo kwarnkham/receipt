@@ -126,12 +126,12 @@ const leftDrawerOpen = ref(false);
 const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 };
-const { downloadPngDomToImage } = useUtility();
+const { downloadJpegDomToImage } = useUtility();
 
 const userStore = useUserStore();
 
 const downloadPage = (id) => {
-  downloadPngDomToImage(
+  downloadJpegDomToImage(
     document.getElementById("receipt-page"),
     `reciept-${id}`
   );

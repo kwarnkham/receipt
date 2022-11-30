@@ -1,6 +1,5 @@
 import { copyToClipboard, Notify } from "quasar";
 import domtoimage from "dom-to-image";
-import { saveAs } from 'file-saver';
 export default function useUtility () {
   return {
     removeFalsyProperty: (object) => {
@@ -84,10 +83,13 @@ export default function useUtility () {
     isSuperAdmin: (user) => {
       return user.roles?.map((e) => e.name).includes("super admin");
     },
-    downloadPngDomToImage: async (node, name) => {
+    downloadJpegDomToImage: async (node, name) => {
       try {
-        const blob = await domtoimage.toBlob(node)
-        saveAs(blob, name + '.png')
+        const dataUrl = await domtoimage.toJpeg(node)
+        const link = document.createElement('a');
+        link.download = name + '.jpeg';
+        link.href = dataUrl;
+        link.click();
       } catch (error) {
         console.log(error)
       }

@@ -123,7 +123,7 @@ import usePrinter from "src/composables/printer";
 import useApp from "src/composables/app";
 
 const { formatDate } = date;
-const { formatCurrency, downloadPngDomToImage } = useUtility();
+const { formatCurrency, downloadJpegDomToImage } = useUtility();
 const props = defineProps({
   receipt: {
     type: Object,
@@ -168,7 +168,7 @@ const print = () => {
     const el = document.getElementById("print-target");
     el.style.backgroundColor = "white";
     loading.show();
-    downloadPngDomToImage(el, props.receipt.code)
+    downloadJpegDomToImage(el, props.receipt.code)
       .then(() => {
         el.style.backgroundColor = "transparent";
       })
