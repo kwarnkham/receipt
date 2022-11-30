@@ -1,10 +1,10 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="lHh Lpr lFf" class="max-w-400">
     <transition
       enter-active-class="animated slideInDown"
       leave-active-class="animated slideOutUp"
     >
-      <q-header elevated v-if="!takingSS">
+      <q-header elevated v-if="!takingSS" class="my-header max-w-400">
         <q-toolbar>
           <q-btn
             flat
@@ -142,3 +142,13 @@ const links = computed(() =>
   })
 );
 </script>
+
+<style scoped>
+.max-w-400 {
+  max-width: 400px;
+}
+.my-header {
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+</style>
