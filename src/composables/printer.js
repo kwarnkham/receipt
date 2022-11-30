@@ -101,7 +101,7 @@ export default function usePrinter (width = 360) {
     let index = 0;
     let imagePrintData = getImagePrintData(imageData);
     const sendNextImageDataBatch = async (resolve, reject) => {
-      const max = 512 / 2;
+      const max = 512 / 4;
       if (index + max < imagePrintData.length) {
         try {
           if (!printCharacteristic.value) reject('no printer conneted')

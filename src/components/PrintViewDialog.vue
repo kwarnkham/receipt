@@ -13,21 +13,23 @@
         </div>
 
         <div
-          class="row justify-between"
+          class="row justify-between full-width no-wrap"
           :class="{ 'q-mt-sm border-top': receipt.user.phones?.length || logo }"
         >
-          <div>
+          <div class="col">
             <q-icon name="person" class="q-mr-xs" />{{ receipt.customer_name }}
           </div>
-          <div>
+          <div class="text-right">
             <q-icon name="phone_iphone" class="q-mr-xs" />{{
               receipt.customer_phone
             }}
           </div>
         </div>
-        <div class="row justify-between">
-          <div><q-icon name="receipt" class="q-mr-xs" />{{ receipt.code }}</div>
-          <div>
+        <div class="row justify-between full-width no-wrap">
+          <div class="col">
+            <span class="text-xs">{{ receipt.code }}</span>
+          </div>
+          <div class="text-right">
             <q-icon name="calendar_month" class="q-mr-xs" />{{
               formatDate(receipt.date, "DD-MM-YYYY")
             }}
@@ -101,7 +103,11 @@
       </div>
       <div class="row justify-around full-width">
         <q-btn icon="close" @click="onDialogHide"></q-btn>
-        <q-btn icon="print" @click="print" :disabled="printing"></q-btn>
+        <q-btn
+          :icon="platform.is.iphone || platform.is.ipad ? 'download' : 'print'"
+          @click="print"
+          :disabled="printing"
+        ></q-btn>
       </div>
 
       <div class="col"></div>
@@ -115,6 +121,7 @@ import useUtility from "src/composables/utility";
 import { computed, ref } from "vue";
 import usePrinter from "src/composables/printer";
 import useApp from "src/composables/app";
+import domtoimage from "dom-to-image";
 
 const { formatDate } = date;
 const { formatCurrency } = useUtility();
@@ -124,7 +131,7 @@ const props = defineProps({
     required: true,
   },
 });
-const { loading, notify } = useQuasar();
+const { loading, notify, platform } = useQuasar();
 const { getImage } = useApp();
 const total = computed(() =>
   props.receipt.items.reduce(
@@ -132,6 +139,8 @@ const total = computed(() =>
     0
   )
 );
+
+console.log(platform);
 
 const logo = computed(
   () => props.receipt.user.pictures.find((e) => e.type == 3)?.name
@@ -148,15 +157,30 @@ const grandTotal = computed(
 const { sendPrinterData } = usePrinter();
 const print = () => {
   printing.value = true;
-  sendPrinterData(document.getElementById("print-target"))
-    .catch((error) => {
-      if (error) notify(error);
-      else notify("Printer has disconnected");
-    })
-    .finally(() => {
-      printing.value = false;
-      loading.hide();
-    });
+  if (!platform.is.ipad && !platform.is.iphone)
+    sendPrinterData(document.getElementById("print-target"))
+      .catch((error) => {
+        if (error) notify(error);
+        else notify("Printer has disconnected");
+      })
+      .finally(() => {
+        printing.value = false;
+        loading.hide();
+      });
+  else {
+    domtoimage
+      .toPng(document.getElementById("print-target"))
+      .then((dataUrl) => {
+        const link = document.createElement("a");
+        link.download = props.receipt.code + ".png";
+        link.href = dataUrl;
+        link.click();
+      })
+      .finally(() => {
+        printing.value = false;
+        loading.hide();
+      });
+  }
   // sendPrinterData(document.getElementById("foo"));
 };
 
