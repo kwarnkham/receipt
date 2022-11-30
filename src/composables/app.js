@@ -72,6 +72,12 @@ export default function useApp () {
           return "wavepay-logo.png";
         case 3:
           return "paynow-logo.png";
+        case 4:
+          return "ayapay-logo.png";
+        case 5:
+          return "cbpay-logo.png";
+        case 6:
+          return "yomapay-logo.png"
       }
     },
     callNumber: (number) => {

@@ -1,6 +1,7 @@
 import { copyToClipboard, Notify } from "quasar";
+import domtoimage from "dom-to-image";
 
-export default function useUtility() {
+export default function useUtility () {
   return {
     removeFalsyProperty: (object) => {
       const keys = Object.keys(object);
@@ -83,5 +84,16 @@ export default function useUtility() {
     isSuperAdmin: (user) => {
       return user.roles?.map((e) => e.name).includes("super admin");
     },
+    downloadPngDomToImage: async (node, name) => {
+      try {
+        const dataUrl = await domtoimage.toPng(node)
+        const link = document.createElement("a");
+        link.download = name + '.png';
+        link.href = dataUrl;
+        link.click();
+      } catch (error) {
+        console.log(error)
+      }
+    }
   };
 }

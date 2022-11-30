@@ -121,10 +121,9 @@ import useUtility from "src/composables/utility";
 import { computed, ref } from "vue";
 import usePrinter from "src/composables/printer";
 import useApp from "src/composables/app";
-import domtoimage from "dom-to-image";
 
 const { formatDate } = date;
-const { formatCurrency } = useUtility();
+const { formatCurrency, downloadPngDomToImage } = useUtility();
 const props = defineProps({
   receipt: {
     type: Object,
@@ -139,8 +138,6 @@ const total = computed(() =>
     0
   )
 );
-
-console.log(platform);
 
 const logo = computed(
   () => props.receipt.user.pictures.find((e) => e.type == 3)?.name
@@ -168,13 +165,12 @@ const print = () => {
         loading.hide();
       });
   else {
-    domtoimage
-      .toPng(document.getElementById("print-target"))
-      .then((dataUrl) => {
-        const link = document.createElement("a");
-        link.download = props.receipt.code + ".png";
-        link.href = dataUrl;
-        link.click();
+    const el = document.getElementById("print-target");
+    el.style.backgroundColor = "white";
+    loading.show();
+    downloadPngDomToImage(el, props.receipt.code)
+      .then(() => {
+        el.style.backgroundColor = "transparent";
       })
       .finally(() => {
         printing.value = false;

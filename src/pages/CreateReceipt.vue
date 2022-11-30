@@ -1,5 +1,5 @@
 <template>
-  <q-page :style-fn="pageOptions" class="column q-px-xs">
+  <q-page :style-fn="pageOptions" class="column q-px-xs" id="receipt-page">
     <div
       class="background-image"
       :style="{

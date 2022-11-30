@@ -4,7 +4,7 @@
       enter-active-class="animated slideInDown"
       leave-active-class="animated slideOutUp"
     >
-      <q-header elevated v-if="!takingSS" class="my-header max-w-400">
+      <q-header elevated class="my-header max-w-400">
         <q-toolbar>
           <q-btn
             flat
@@ -67,9 +67,9 @@
                     @click="$router.replace({ name: 'createReceipt' })"
                   />
                   <q-btn
-                    icon="screenshot"
+                    icon="download"
                     flat
-                    @click="hideHeaderAndFooterForScreenshot"
+                    @click="downloadPage($route.params.id)"
                   />
                   <q-btn icon="print" flat @click="$emitter.emit('print')" />
                 </template>
@@ -118,6 +118,7 @@ import routes from "src/router/routes";
 import { useUserStore } from "src/stores/user";
 import useApp from "src/composables/app";
 import LanguageSwitcher from "src/components/LanguageSwitcher.vue";
+import useUtility from "src/composables/utility";
 
 const { children } = routes[0];
 const { isAdmin, getImage, callNumber } = useApp();
@@ -125,14 +126,15 @@ const leftDrawerOpen = ref(false);
 const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 };
+const { downloadPngDomToImage } = useUtility();
 
 const userStore = useUserStore();
-const takingSS = ref(false);
-const hideHeaderAndFooterForScreenshot = () => {
-  takingSS.value = true;
-  setTimeout(() => {
-    takingSS.value = false;
-  }, 3000);
+
+const downloadPage = (id) => {
+  downloadPngDomToImage(
+    document.getElementById("receipt-page"),
+    `reciept-${id}`
+  );
 };
 
 const links = computed(() =>
@@ -148,6 +150,7 @@ const links = computed(() =>
   max-width: 400px;
 }
 .my-header {
+  width: 100%;
   left: 50%;
   transform: translate(-50%, 0);
 }
