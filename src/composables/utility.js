@@ -1,6 +1,6 @@
 import { copyToClipboard, Notify } from "quasar";
 import domtoimage from "dom-to-image";
-
+import { saveAs } from 'file-saver';
 export default function useUtility () {
   return {
     removeFalsyProperty: (object) => {
@@ -86,11 +86,8 @@ export default function useUtility () {
     },
     downloadPngDomToImage: async (node, name) => {
       try {
-        const dataUrl = await domtoimage.toPng(node)
-        const link = document.createElement("a");
-        link.download = name + '.png';
-        link.href = dataUrl;
-        link.click();
+        const blob = await domtoimage.toBlob(node)
+        saveAs(blob, name + '.png')
       } catch (error) {
         console.log(error)
       }
