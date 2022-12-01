@@ -1,18 +1,8 @@
 <template>
   <q-dialog ref="dialogRef" @hide="onDialogHide" persistent maximized>
     <q-card class="column items-center no-wrap">
-      <div
-        class="receipt text-grey-10 column justify-start bg-white"
-        :class="{ 'bg-white': printing }"
-        id="print-target"
-      >
-        <img
-          :src="getImage(logo)"
-          alt="receipt"
-          width="360"
-          v-if="logo"
-          :class="{ 'bg-white': printing }"
-        />
+      <div class="receipt text-grey-10 column justify-start" id="print-target">
+        <img :src="getImage(logo)" alt="receipt" width="360" v-if="logo" />
         <div
           class="row justify-evenly font-weight-bolder text-h6"
           v-if="receipt.user.phones?.length"
