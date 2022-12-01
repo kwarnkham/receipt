@@ -1,10 +1,20 @@
 <template>
   <q-dialog ref="dialogRef" @hide="onDialogHide" persistent maximized>
     <q-card class="column items-center no-wrap">
-      <div class="receipt text-grey-10 column justify-start" id="print-target">
-        <img :src="getImage(logo)" alt="receipt" width="360" v-if="logo" />
+      <div
+        class="receipt text-grey-10 column justify-start bg-white"
+        :class="{ 'bg-white': printing }"
+        id="print-target"
+      >
+        <img
+          :src="getImage(logo)"
+          alt="receipt"
+          width="360"
+          v-if="logo"
+          :class="{ 'bg-white': printing }"
+        />
         <div
-          class="row justify-between font-weight-bolder text-h6"
+          class="row justify-evenly font-weight-bolder text-h6"
           v-if="receipt.user.phones?.length"
         >
           <div v-for="phone in receipt.user.phones" :key="phone.id">
@@ -104,7 +114,8 @@
       <div class="row justify-around full-width">
         <q-btn icon="close" @click="onDialogHide"></q-btn>
         <q-btn
-          :icon="platform.is.iphone || platform.is.ipad ? 'download' : 'print'"
+          v-if="!platform.is.iphone && !platform.is.ipad"
+          :icon="'print'"
           @click="print"
           :disabled="printing"
         ></q-btn>
@@ -123,7 +134,7 @@ import usePrinter from "src/composables/printer";
 import useApp from "src/composables/app";
 
 const { formatDate } = date;
-const { formatCurrency, downloadJpegDomToImage } = useUtility();
+const { formatCurrency } = useUtility();
 const props = defineProps({
   receipt: {
     type: Object,
@@ -154,29 +165,16 @@ const grandTotal = computed(
 const { sendPrinterData } = usePrinter();
 const print = () => {
   printing.value = true;
-  if (!platform.is.ipad && !platform.is.iphone)
-    sendPrinterData(document.getElementById("print-target"))
-      .catch((error) => {
-        if (error) notify(error);
-        else notify("Printer has disconnected");
-      })
-      .finally(() => {
-        printing.value = false;
-        loading.hide();
-      });
-  else {
-    const el = document.getElementById("print-target");
-    el.style.backgroundColor = "white";
-    loading.show();
-    downloadJpegDomToImage(el, props.receipt.code)
-      .then(() => {
-        el.style.backgroundColor = "transparent";
-      })
-      .finally(() => {
-        printing.value = false;
-        loading.hide();
-      });
-  }
+  sendPrinterData(document.getElementById("print-target"))
+    .catch((error) => {
+      if (error) notify(error);
+      else notify("Printer has disconnected");
+    })
+    .finally(() => {
+      printing.value = false;
+      loading.hide();
+    });
+
   // sendPrinterData(document.getElementById("foo"));
 };
 

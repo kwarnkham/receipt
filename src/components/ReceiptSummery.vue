@@ -23,7 +23,7 @@
       </div>
     </div>
 
-    <div class="col text-caption">
+    <div class="col text-caption q-gutter-y-xs">
       <div class="row text-right">
         <div class="col row items-center">
           <div class="footer-label">{{ $t("total") }}:</div>
@@ -91,11 +91,10 @@
 </template>
 
 <script setup>
-import { emitter } from "src/boot/eventEmitter";
 import useApp from "src/composables/app";
 import useUtility from "src/composables/utility";
 import { useUserStore } from "src/stores/user";
-import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { computed, ref } from "vue";
 
 const props = defineProps({
   receipt: {
@@ -126,17 +125,6 @@ const grandTotal = computed(
 defineExpose({
   deposit,
   discount,
-});
-// const resetData = () => {
-//   deposit.value = "";
-//   discount.value = "";
-// };
-onMounted(() => {
-  // emitter.on("addNewReceipt", resetData);
-});
-
-onBeforeUnmount(() => {
-  // emitter.off("addNewReceipt", resetData);
 });
 </script>
 

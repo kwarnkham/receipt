@@ -50,7 +50,9 @@
         />
       </div>
     </q-form>
-    <div class="text-grey-6 fixed-bottom-right q-px-sm">{{ version }}</div>
+    <div class="text-grey-6 fixed-bottom-right q-px-sm q-pb-lg">
+      {{ version }}
+    </div>
   </q-page>
 </template>
 

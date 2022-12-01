@@ -1,23 +1,16 @@
 <template>
   <q-page :style-fn="pageOptions" class="column q-px-xs" id="receipt-page">
-    <div
-      class="background-image"
-      :style="{
-        backgroundImage:
-          'url(' +
-          getImage(user?.pictures.find((e) => e.type == 1)?.name) +
-          ')',
-      }"
-    ></div>
-    <div
-      class="col column background-image"
-      :style="{
-        backgroundImage:
-          'url(' +
-          getImage(user?.pictures.find((e) => e.type == 2)?.name) +
-          ')',
-      }"
-    >
+    <img
+      :src="getImage(user?.pictures.find((e) => e.type == 1)?.name)"
+      height="120"
+      alt="logo"
+    />
+    <div class="col column relative-position">
+      <img
+        :src="getImage(user?.pictures.find((e) => e.type == 2)?.name)"
+        alt="background"
+        class="absolute fit z-neg-1"
+      />
       <ReceiptHeader :receipt="receipt" ref="header" />
       <ReceiptBody
         :items="items"
@@ -26,7 +19,12 @@
         @itemFilled="fillItem"
         :user="user"
       />
-      <ReceiptSummery :receipt="receipt" :items="items" ref="summery" />
+      <ReceiptSummery
+        :receipt="receipt"
+        :items="items"
+        ref="summery"
+        class="q-my-xs"
+      />
     </div>
   </q-page>
 </template>
@@ -250,12 +248,3 @@ onBeforeUnmount(() => {
   emitter.off("print", showPrintView);
 });
 </script>
-
-<style lang="scss" scoped>
-.background-image {
-  height: 120px;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-</style>

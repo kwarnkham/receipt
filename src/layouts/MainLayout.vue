@@ -67,6 +67,7 @@
                     @click="$router.replace({ name: 'createReceipt' })"
                   />
                   <q-btn
+                    v-if="!platform.is.iphone && !platform.is.ipad"
                     icon="download"
                     flat
                     @click="downloadPage($route.params.id)"
@@ -107,7 +108,10 @@
     </q-drawer>
 
     <q-page-container>
-      <router-view :key="$route.name" />
+      <router-view
+        :key="$route.name"
+        :class="{ 'q-pb-lg': platform.is.iphone || platform.is.ios }"
+      />
     </q-page-container>
   </q-layout>
 </template>
@@ -119,6 +123,7 @@ import { useUserStore } from "src/stores/user";
 import useApp from "src/composables/app";
 import LanguageSwitcher from "src/components/LanguageSwitcher.vue";
 import useUtility from "src/composables/utility";
+import { useQuasar } from "quasar";
 
 const { children } = routes[0];
 const { isAdmin, getImage, callNumber } = useApp();
@@ -127,7 +132,7 @@ const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 };
 const { downloadJpegDomToImage } = useUtility();
-
+const { platform } = useQuasar();
 const userStore = useUserStore();
 
 const downloadPage = (id) => {

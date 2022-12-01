@@ -49,7 +49,7 @@ import { useUserStore } from "src/stores/user";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
-const { localStorage, dialog, platform, loading } = useQuasar();
+const { localStorage, dialog, loading } = useQuasar();
 const userStore = useUserStore();
 const router = useRouter();
 const { t } = useI18n();
