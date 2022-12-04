@@ -145,8 +145,14 @@
         :src="getImage(receiptLogoPicture?.name)"
         alt="receipt-logo"
         class="q-mt-sm"
+        id="receipt-logo"
       >
-        <div class="absolute-bottom">Receipt Logo</div>
+        <div class="absolute-bottom row justify-between">
+          <div>Receipt Logo</div>
+          <div v-if="receiptLogoPicture">
+            <q-btn icon="print" size="sm" flat @click="print" />
+          </div>
+        </div>
         <PicturesSelector v-model="receiptLogo">
           <template #showSelectedPictures="{ showPicturesToUpload }">
             <q-btn
@@ -275,8 +281,17 @@ import { useQuasar, date } from "quasar";
 import PicturesSelector from "src/components/PicturesSelector.vue";
 import useApp from "src/composables/app";
 import EditPaymentInfoFormDialog from "src/components/EditPaymentInfoFormDialog";
-const { formatDate, addToDate, getDateDiff } = date;
+import usePrinter from "src/composables/printer";
+const { formatDate, addToDate } = date;
 const user = ref(null);
+const { sendPrinterData } = usePrinter();
+const print = () => {
+  sendPrinterData(
+    document.getElementById("receipt-logo")?.children[1]?.children[0]
+  ).finally(() => {
+    loading.hide();
+  });
+};
 const {
   findUser,
   createPicture,

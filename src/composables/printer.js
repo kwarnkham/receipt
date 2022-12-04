@@ -31,8 +31,8 @@ export default function usePrinter () {
       spinner: QSpinnerHourglass,
       message: "Printing...",
     });
-    height.value = node.clientHeight;
-    const dataUrl = await domtoimage.toPng(node)
+    height.value = Math.round((node.clientHeight * width.value) / 360);
+    const dataUrl = await domtoimage.toPng(node, { cacheBust: true })
 
     const printTarget = new Image();
     printTarget.src = dataUrl;
