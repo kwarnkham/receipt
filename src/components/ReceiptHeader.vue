@@ -60,7 +60,7 @@
       </div>
     </div>
   </div>
-  <div class="row items-center text-caption">
+  <div class="row info items-center text-caption border-bot-dot">
     <template v-if="!receipt">
       <q-icon name="apartment" size="xs" />
       <input v-model="address" dense class="col" :disabled="!mobile" />
@@ -69,6 +69,21 @@
       <q-icon name="apartment" size="xs" />
       <span>
         {{ receipt.customer_address }}
+      </span>
+    </div>
+  </div>
+  <div
+    class="row info items-center text-caption border-bot-dot"
+    v-if="!receipt || receipt.note"
+  >
+    <template v-if="!receipt">
+      <q-icon name="note" size="xs" />
+      <input v-model="note" dense class="col" :disabled="!mobile" />
+    </template>
+    <div v-else-if="receipt.note">
+      <q-icon name="note" size="xs" />
+      <span>
+        {{ receipt.note }}
       </span>
     </div>
   </div>
@@ -91,6 +106,7 @@ const { dialog, localStorage } = useQuasar();
 const name = ref("");
 const mobile = ref("");
 const address = ref("");
+const note = ref("");
 const orderDate = ref(formatDate(Date.now(), "YYYY-MM-DD"));
 const explainVoucherNumber = () => {
   dialog({
@@ -102,6 +118,7 @@ defineExpose({
   mobile,
   address,
   orderDate,
+  note,
 });
 
 const userStore = useUserStore();
@@ -110,6 +127,7 @@ const resetData = () => {
   mobile.value = "";
   address.value = "";
   orderDate.value = formatDate(Date.now(), "YYYY-MM-DD");
+  note.value = "";
 };
 const chooseDate = (e) => {
   e.target.showPicker();

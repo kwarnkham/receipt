@@ -90,6 +90,7 @@ const submit = () => {
     discount: summery.value.discount,
     deposit: summery.value.deposit,
     items: orderItems.value,
+    note: header.value.note,
   })
     .then((data) => {
       receipt.value = data;

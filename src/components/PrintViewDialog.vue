@@ -99,6 +99,8 @@
             </tr>
           </tbody>
         </q-markup-table>
+        <div v-if="receipt.note">Note: {{ receipt.note }}</div>
+        <div class="text-caption">{{ printTime }}</div>
         <div class="text-overline flex row line-text q-mt-sm">Thank you</div>
       </div>
       <div class="full-width q-px-lg">
@@ -124,7 +126,7 @@
 <script setup>
 import { useDialogPluginComponent, date, useQuasar } from "quasar";
 import useUtility from "src/composables/utility";
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import usePrinter from "src/composables/printer";
 import useApp from "src/composables/app";
 
@@ -160,6 +162,8 @@ const grandTotal = computed(
     (props.receipt ? props.receipt.discount : discount.value)
 );
 const { sendPrinterData } = usePrinter();
+
+const printTime = ref(formatDate(new Date(), "DD-MM-YYYY HH:mm:ss"));
 const print = () => {
   printing.value = true;
   sendPrinterData(document.getElementById("print-target"), printSize.value)
@@ -190,6 +194,12 @@ const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
 //                    example: onDialogOK() - no payload
 //                    example: onDialogOK({ /*...*/ }) - with payload
 // onDialogCancel - Function to call to settle dialog with "cancel" outcome
+
+onMounted(() => {
+  setInterval(() => {
+    printTime.value = formatDate(new Date(), "DD-MM-YYYY HH:mm:ss");
+  }, 1000);
+});
 </script>
 
 <style lang="scss" scoped>
