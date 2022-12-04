@@ -101,6 +101,10 @@
         </q-markup-table>
         <div class="text-overline flex row line-text q-mt-sm">Thank you</div>
       </div>
+      <div class="full-width q-px-lg">
+        <q-badge color="primary"> Size: {{ printSize }} (1 to 10) </q-badge>
+        <q-slider v-model="printSize" markers :min="1" :max="10" />
+      </div>
       <div class="row justify-around full-width">
         <q-btn icon="close" @click="onDialogHide"></q-btn>
         <q-btn
@@ -108,6 +112,7 @@
           :icon="'print'"
           @click="print"
           :disabled="printing"
+          color="primary"
         ></q-btn>
       </div>
 
@@ -131,7 +136,7 @@ const props = defineProps({
     required: true,
   },
 });
-const { loading, notify, platform } = useQuasar();
+const { loading, notify, platform, localStorage } = useQuasar();
 const { getImage } = useApp();
 const total = computed(() =>
   props.receipt.items.reduce(
@@ -139,6 +144,8 @@ const total = computed(() =>
     0
   )
 );
+
+const printSize = ref(Number(localStorage.getItem("printSize")) || 1);
 
 const logo = computed(
   () => props.receipt.user.pictures.find((e) => e.type == 3)?.name
@@ -155,7 +162,7 @@ const grandTotal = computed(
 const { sendPrinterData } = usePrinter();
 const print = () => {
   printing.value = true;
-  sendPrinterData(document.getElementById("print-target"))
+  sendPrinterData(document.getElementById("print-target"), printSize.value)
     .catch((error) => {
       if (error) notify(error);
       else notify("Printer has disconnected");
@@ -163,6 +170,7 @@ const print = () => {
     .finally(() => {
       printing.value = false;
       loading.hide();
+      localStorage.set("printSize", printSize.value);
     });
 
   // sendPrinterData(document.getElementById("foo"));

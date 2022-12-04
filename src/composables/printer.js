@@ -2,7 +2,8 @@ import domtoimage from "dom-to-image";
 import { QSpinnerHourglass, useQuasar } from "quasar";
 import { inject, ref } from "vue";
 
-export default function usePrinter (width = 360) {
+export default function usePrinter () {
+  const width = ref(360)
   const height = ref(0)
   const { printCharacteristic, setPrintCharacteristic } = inject('printer')
   const printId = 'print-this'
@@ -43,7 +44,7 @@ export default function usePrinter (width = 360) {
     // Use the canvas to get image data
     const canvas = document.createElement("canvas");
     // Canvas dimensions need to be a multiple of 40 for this printer
-    canvas.width = width;
+    canvas.width = width.value;
     canvas.height = height.value;
     const context = canvas.getContext("2d");
     context.drawImage(document.getElementById(printId), 0, 0, canvas.width, canvas.height);
@@ -56,9 +57,9 @@ export default function usePrinter (width = 360) {
   }
   const getDarkPixel = (x, y, imageData) => {
     // Return the pixels that will be printed black
-    let red = imageData[(width * y + x) * 4];
-    let green = imageData[(width * y + x) * 4 + 1];
-    let blue = imageData[(width * y + x) * 4 + 2];
+    let red = imageData[(width.value * y + x) * 4];
+    let green = imageData[(width.value * y + x) * 4 + 1];
+    let blue = imageData[(width.value * y + x) * 4 + 2];
     return red + green + blue > 0 ? 1 : 0;
   }
   const getImagePrintData = (imageData) => {
@@ -67,20 +68,20 @@ export default function usePrinter (width = 360) {
       return new Uint8Array([]);
     }
     // Each 8 pixels in a row is represented by a byte
-    let printData = new Uint8Array((width / 8) * height.value + 8);
+    let printData = new Uint8Array((width.value / 8) * height.value + 8);
     // Set the header bytes for printing the image
     printData[0] = 29; // Print raster bitmap
     printData[1] = 118; // Print raster bitmap
     printData[2] = 48; // Print raster bitmap
     printData[3] = 0; // Normal 203.2 DPI
-    printData[4] = width / 8; // Number of horizontal data bits (LSB)
+    printData[4] = width.value / 8; // Number of horizontal data bits (LSB)
     printData[5] = 0; // Number of horizontal data bits (MSB)
     printData[6] = height.value % 256; // Number of vertical data bits (LSB)
     printData[7] = height.value / 256; // Number of vertical data bits (MSB)
     let offset = 7;
     // Loop through image rows in bytes
     for (let i = 0; i < height.value; ++i) {
-      for (let k = 0; k < width / 8; ++k) {
+      for (let k = 0; k < width.value / 8; ++k) {
         let k8 = k * 8;
         //  Pixel to bit position mapping
         printData[++offset] =
@@ -142,7 +143,8 @@ export default function usePrinter (width = 360) {
     });
 
   }
-  const sendPrinterData = (node) => {
+  const sendPrinterData = (node, printSize = 1) => {
+    width.value += (printSize * 40) - 40;
     return new Promise((resolve, reject) => {
       if (!printCharacteristic.value) {
         navigator.bluetooth

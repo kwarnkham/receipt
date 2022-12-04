@@ -152,7 +152,7 @@ const links = computed(() =>
 
 <style scoped>
 .max-w-400 {
-  max-width: 400px;
+  max-width: 420px;
 }
 .my-header {
   width: 100%;
