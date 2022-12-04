@@ -103,11 +103,14 @@
         <div class="text-caption">{{ printTime }}</div>
         <div class="text-overline flex row line-text q-mt-sm">Thank you</div>
       </div>
-      <div class="full-width q-px-lg">
-        <q-badge color="primary"> Size: {{ printSize }} (1 to 10) </q-badge>
-        <q-slider v-model="printSize" markers :min="1" :max="10" />
-      </div>
-      <div class="row justify-around full-width">
+
+      <div class="row justify-around receipt">
+        <div class="col-12">
+          <div class="full-width q-px-lg">
+            <q-badge color="primary"> Size: {{ printSize }} (1 to 10) </q-badge>
+            <q-slider v-model="printSize" markers :min="1" :max="10" />
+          </div>
+        </div>
         <q-btn icon="close" @click="onDialogHide"></q-btn>
         <q-btn
           v-if="!platform.is.iphone && !platform.is.ipad"
