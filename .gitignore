@@ -3,7 +3,6 @@
 node_modules
 
 .env
-deploy.md
 .env.*
 *.zip
 todo.md
