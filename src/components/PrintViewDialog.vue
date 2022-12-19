@@ -169,12 +169,15 @@ const grandTotal = computed(
     (props.receipt ? props.receipt.deposit : deposit.value) -
     (props.receipt ? props.receipt.discount : discount.value)
 );
-const { sendPrinterData } = usePrinter();
+const { sendPrinterData, sendTextData } = usePrinter();
 
 const printTime = ref(formatDate(new Date(), "DD-MM-YYYY HH:mm:ss"));
 const print = () => {
   printing.value = true;
   sendPrinterData(document.getElementById("print-target"), printSize.value)
+    .then(() => {
+      sendTextData("\u000A\u000D");
+    })
     .catch((error) => {
       if (error) notify(error);
       else notify("Printer has disconnected");
