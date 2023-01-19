@@ -107,7 +107,12 @@
       <div class="row justify-around receipt">
         <div class="col-12">
           <div class="full-width q-px-lg">
-            <q-badge color="primary"> Size: {{ printSize }} (1 to 10) </q-badge>
+            <q-badge
+              color="primary"
+              v-if="!platform.is.iphone && !platform.is.ipad"
+            >
+              Size: {{ printSize }} (1 to 10)
+            </q-badge>
             <q-slider v-model="printSize" markers :min="1" :max="10" />
           </div>
         </div>
@@ -164,12 +169,15 @@ const grandTotal = computed(
     (props.receipt ? props.receipt.deposit : deposit.value) -
     (props.receipt ? props.receipt.discount : discount.value)
 );
-const { sendPrinterData } = usePrinter();
+const { sendPrinterData, sendTextData } = usePrinter();
 
 const printTime = ref(formatDate(new Date(), "DD-MM-YYYY HH:mm:ss"));
 const print = () => {
   printing.value = true;
   sendPrinterData(document.getElementById("print-target"), printSize.value)
+    .then(() => {
+      sendTextData("\u000A\u000D");
+    })
     .catch((error) => {
       if (error) notify(error);
       else notify("Printer has disconnected");
