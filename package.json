@@ -13,7 +13,7 @@
     "build-pwa": "quasar build -m pwa",
     "build": "npm run prepare-build && npm run build-pwa && npm run build-capacitor && npm run sign-apk && npm run optimize-apk && npm run export",
     "build-web": "npm run prepare-build && npm run build-pwa && npm run export",
-    "export": "rm -f spa.zip && if [[ $OSTYPE == msys ]]; then npm run zip-windows; else npm run zip-macos; fi",
+    "export": "rm -f spa.zip && if [[ $OSTYPE == msys ]]; then npm run zip-windows; else npm run zip-macos; fi && cp .env.local .env",
     "zip-macos": "ditto -c -k --sequesterRsrc --keepParent dist/pwa spa.zip",
     "zip-windows": "cd dist && zip -r ../spa.zip ./pwa && cd ../",
     "build-capacitor": "quasar build -m capacitor -T android",
@@ -23,6 +23,7 @@
     "dev-android": "cp .env.production .env && quasar dev -m capacitor -T android"
   },
   "dependencies": {
+    "@quasar/cli": "^2.0.0",
     "@quasar/extras": "^1.0.0",
     "axios": "^0.21.1",
     "browser-image-compression": "^2.0.0",

@@ -30,7 +30,9 @@
       >
         <q-item-section
           :class="{
-            'text-red': user.latest_subscription.remaining_duration < 0,
+            'text-red':
+              user.latest_subscription?.remaining_duration < 0 ||
+              !user.latest_subscription,
           }"
         >
           {{ user.name ?? user.mobile }}

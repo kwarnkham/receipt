@@ -18,13 +18,8 @@
     </div>
     <q-expansion-item expand-separator label="Subscription">
       <q-form @submit.prevent="subscribe">
-        <q-input
-          :label="'months'"
-          v-model="monthDuration"
-          required
-          type="tel"
-        />
-        <q-input :label="'Monthly Price'" v-model="price" required type="tel" />
+        <q-input :label="'Days'" v-model="dayDuration" required type="tel" />
+        <q-input :label="'Price'" v-model="price" required type="tel" />
         <div class="text-center">
           <q-btn type="submit" :label="'Submit'" flat no-caps />
         </div>
@@ -404,7 +399,7 @@ const showEditUserPaymentDialog = (payment) => {
     }
   });
 };
-const monthDuration = ref(3);
+const dayDuration = ref(30);
 const price = ref(20000);
 const subscribe = () => {
   dialog({
@@ -413,7 +408,7 @@ const subscribe = () => {
     loading.show();
     subscribeUser({
       user_id: user.value.id,
-      day: Number(monthDuration.value) * 30,
+      day: Number(dayDuration.value),
       price: price.value,
     })
       .then((data) => {
