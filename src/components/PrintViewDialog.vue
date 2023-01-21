@@ -36,7 +36,7 @@
           </div>
         </div>
         <div>
-          <q-icon name="pin_drop" class="q-mr-xs" />
+          <q-icon name="location_on" class="q-mr-xs" />
           {{ receipt.customer_address }}
         </div>
 
@@ -109,14 +109,9 @@
       </div>
 
       <div class="row justify-around receipt">
-        <div class="col-12">
+        <div class="col-12" v-if="!platform.is.iphone && !platform.is.ipad">
           <div class="full-width q-px-lg">
-            <q-badge
-              color="primary"
-              v-if="!platform.is.iphone && !platform.is.ipad"
-            >
-              Size: {{ printSize }} (1 to 10)
-            </q-badge>
+            <q-badge color="primary"> Size: {{ printSize }} (1 to 10) </q-badge>
             <q-slider v-model="printSize" markers :min="1" :max="10" />
           </div>
         </div>
