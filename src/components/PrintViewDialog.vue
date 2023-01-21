@@ -35,6 +35,10 @@
             }}
           </div>
         </div>
+        <div>
+          <q-icon name="pin_drop" class="q-mr-xs" />
+          {{ receipt.customer_address }}
+        </div>
 
         <q-markup-table
           wrap-cells
