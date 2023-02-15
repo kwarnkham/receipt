@@ -42,6 +42,7 @@ import ReceiptBody from "src/components/ReceiptBody.vue";
 import ReceiptSummery from "src/components/ReceiptSummery.vue";
 import { useUserStore } from "src/stores/user";
 import PrintViewDialog from "src/components/PrintViewDialog.vue";
+import PrintAddressDialog from "src/components/PrintAddressDialog.vue";
 const { getDateDiff, formatDate, addToDate } = date;
 
 const router = useRouter();
@@ -211,6 +212,15 @@ const showPrintView = () => {
   });
 };
 
+const showPrintAddressView = () => {
+  dialog({
+    component: PrintAddressDialog,
+    componentProps: {
+      receipt: receipt.value,
+    },
+  });
+};
+
 onMounted(() => {
   notifyUserNearExpiration();
   if (route.params.id) {
@@ -242,10 +252,12 @@ onMounted(() => {
   emitter.on("createReceipt", submit);
   // emitter.on("addNewReceipt", resetData);
   emitter.on("print", showPrintView);
+  emitter.on("printAddress", showPrintAddressView);
 });
 onBeforeUnmount(() => {
   emitter.off("createReceipt", submit);
   // emitter.off("addNewReceipt", resetData);
   emitter.off("print", showPrintView);
+  emitter.off("printAddress", showPrintAddressView);
 });
 </script>

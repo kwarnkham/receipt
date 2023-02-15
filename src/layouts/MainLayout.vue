@@ -73,6 +73,11 @@
                     @click="downloadPage($route.params.id)"
                   />
                   <q-btn icon="print" flat @click="$emitter.emit('print')" />
+                  <q-btn
+                    icon="location_pin"
+                    flat
+                    @click="$emitter.emit('printAddress')"
+                  />
                 </template>
                 <q-btn
                   v-else
