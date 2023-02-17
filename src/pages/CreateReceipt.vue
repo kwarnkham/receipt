@@ -69,7 +69,10 @@ const addRow = () => {
     price: "",
   });
 };
-const submit = () => {
+const submitDraft = () => {
+  submit(true);
+};
+const submit = (draft = false) => {
   if (receipt.value) return;
   if (
     !header.value.name ||
@@ -83,7 +86,7 @@ const submit = () => {
   }
 
   loading.show();
-  createReceipt({
+  const formData = {
     date: header.value.orderDate,
     customer_name: header.value.name,
     customer_phone: header.value.mobile,
@@ -92,7 +95,9 @@ const submit = () => {
     deposit: summery.value.deposit,
     items: orderItems.value,
     note: header.value.note || undefined,
-  })
+  };
+  if (draft) formData.status = "2";
+  createReceipt(formData)
     .then((data) => {
       receipt.value = data;
       preserveItems();
@@ -250,12 +255,14 @@ onMounted(() => {
   }
 
   emitter.on("createReceipt", submit);
+  emitter.on("draftReceipt", submitDraft);
   // emitter.on("addNewReceipt", resetData);
   emitter.on("print", showPrintView);
   emitter.on("printAddress", showPrintAddressView);
 });
 onBeforeUnmount(() => {
   emitter.off("createReceipt", submit);
+  emitter.off("draftReceipt", submitDraft);
   // emitter.off("addNewReceipt", resetData);
   emitter.off("print", showPrintView);
   emitter.off("printAddress", showPrintAddressView);

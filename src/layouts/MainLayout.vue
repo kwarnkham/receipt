@@ -79,12 +79,18 @@
                     @click="$emitter.emit('printAddress')"
                   />
                 </template>
-                <q-btn
-                  v-else
-                  icon="save"
-                  flat
-                  @click="$emitter.emit('createReceipt')"
-                />
+                <template v-else>
+                  <q-btn
+                    icon="save"
+                    flat
+                    @click="$emitter.emit('createReceipt')"
+                  />
+                  <q-btn
+                    icon="label"
+                    flat
+                    @click="$emitter.emit('draftReceipt')"
+                  />
+                </template>
               </q-menu>
             </q-btn>
           </div>

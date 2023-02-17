@@ -23,7 +23,13 @@
         size="sm"
         @click="explainVoucherNumber"
       />
-      <span v-else style="font-size: 9px">{{ receipt.code }}</span>
+      <span
+        v-else
+        style="font-size: 9px"
+        :class="{ 'text-red': receipt.status == 2 }"
+      >
+        {{ receipt.code }}
+      </span>
     </div>
   </div>
 

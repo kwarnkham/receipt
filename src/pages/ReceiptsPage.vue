@@ -33,7 +33,9 @@
         }"
       >
         <q-item-section>
-          <div>Code: {{ receipt.code }}</div>
+          <div :class="{ 'text-red': receipt.status == 2 }">
+            Code: {{ receipt.code }}
+          </div>
           <div>Date: {{ receipt.date }}</div>
         </q-item-section>
         <q-item-section side>

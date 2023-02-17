@@ -193,6 +193,19 @@ export default function useBackend () {
         handleResponse(error);
       }
     },
+    draftReceipt: async (data) => {
+      if (!data.discount) data.discount = undefined;
+      if (!data.deposit) data.deposit = undefined;
+      try {
+        return await api({
+          method: "POST",
+          url: "receipt/draft",
+          data,
+        }).then(({ data }) => data);
+      } catch (error) {
+        handleResponse(error);
+      }
+    },
     findReceipt: async (id) => {
       try {
         return await api({
