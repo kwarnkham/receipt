@@ -7,7 +7,7 @@
         class="col"
         required
         type="tel"
-        v-if="!receipt"
+        v-if="!receipt || receipt.status == 2"
         autofocus
         @blur="fillForm"
       />
@@ -42,7 +42,7 @@
         required
         type="text"
         class="col"
-        v-if="!receipt"
+        v-if="!receipt || receipt.status == 2"
         :disabled="!mobile"
       />
       <div v-else class="text-weight-bold">
@@ -59,7 +59,7 @@
         required
         class="col"
         @click="chooseDate"
-        v-if="!receipt"
+        v-if="!receipt || receipt.status == 2"
       />
       <div v-else>
         {{ formatDate(receipt.date, "DD-MM-YYYY") }}
@@ -67,7 +67,7 @@
     </div>
   </div>
   <div class="row info items-center text-caption border-bot-dot">
-    <template v-if="!receipt">
+    <template v-if="!receipt || receipt.status == 2">
       <q-icon name="apartment" size="xs" />
       <input v-model="address" dense class="col" :disabled="!mobile" />
     </template>
@@ -80,9 +80,11 @@
   </div>
   <div
     class="row info items-center text-caption border-bot-dot"
-    v-if="!receipt || receipt.note"
+    v-if="
+      !receipt || receipt.status == 2 || (receipt.status == 1 && receipt.note)
+    "
   >
-    <template v-if="!receipt">
+    <template v-if="!receipt || receipt.status == 2">
       <q-icon name="note" size="xs" />
       <input v-model="note" dense class="col" :disabled="!mobile" />
     </template>
@@ -102,18 +104,18 @@ import { emitter } from "src/boot/eventEmitter";
 import { useUserStore } from "src/stores/user";
 
 const { formatDate } = date;
-defineProps({
+const props = defineProps({
   receipt: {
     required: true,
   },
 });
 
 const { dialog, localStorage } = useQuasar();
-const name = ref("");
-const mobile = ref("");
-const address = ref("");
-const note = ref("");
-const orderDate = ref(formatDate(Date.now(), "YYYY-MM-DD"));
+const name = ref(props.receipt?.customer_name);
+const mobile = ref(props.receipt?.customer_phone);
+const address = ref(props.receipt?.customer_address);
+const note = ref(props.receipt?.note);
+const orderDate = ref(formatDate(new Date(props.receipt?.date), "YYYY-MM-DD"));
 const explainVoucherNumber = () => {
   dialog({
     title: "Voucher number will be generated when you have saved the voucher.",

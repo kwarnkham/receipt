@@ -34,10 +34,10 @@
         <div class="col row items-center">
           <div class="footer-label">{{ $t("deposit") }}:</div>
           <div class="col outline">
-            {{ formatCurrency(receipt ? receipt.deposit : deposit) }}
+            {{ formatCurrency(receipt ? deposit || receipt.deposit : deposit) }}
           </div>
           <q-popup-edit
-            :disable="!!receipt"
+            :disable="!!receipt && receipt.status == 1"
             :title="'Deposit'"
             :validate="validateNumber"
             auto-save
@@ -58,10 +58,12 @@
         <div class="col row items-center">
           <div class="footer-label">{{ $t("discount") }}:</div>
           <div class="col outline">
-            {{ formatCurrency(receipt ? receipt.discount : discount) }}
+            {{
+              formatCurrency(receipt ? receipt.discount || discount : discount)
+            }}
           </div>
           <q-popup-edit
-            :disable="!!receipt"
+            :disable="!!receipt && receipt.status == 1"
             :title="'Discount'"
             :validate="validateNumber"
             auto-save
@@ -108,8 +110,8 @@ const props = defineProps({
 
 const { formatCurrency } = useUtility();
 const { validateNumber, getImage, getPaymentLogo } = useApp();
-const discount = ref("");
-const deposit = ref("");
+const discount = ref(props.receipt.discount);
+const deposit = ref(props.receipt.deposit);
 const userStore = useUserStore();
 const total = computed(() =>
   props.items.reduce((carry, item) => carry + item.price * item.quantity, 0)
@@ -118,8 +120,8 @@ const total = computed(() =>
 const grandTotal = computed(
   () =>
     total.value -
-    (props.receipt ? props.receipt.deposit : deposit.value) -
-    (props.receipt ? props.receipt.discount : discount.value)
+    (props.receipt ? deposit.value || props.receipt.deposit : deposit.value) -
+    (props.receipt ? discount.value || props.receipt.discount : discount.value)
 );
 
 defineExpose({

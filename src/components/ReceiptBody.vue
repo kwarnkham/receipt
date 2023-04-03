@@ -98,7 +98,7 @@ const { formatCurrency } = useUtility();
 const { dialog } = useQuasar();
 
 const fillItem = (item) => {
-  if (props.receipt) return;
+  if (props.receipt && props.receipt.status == 1) return;
   dialog({
     component: ItemFormDialog,
     componentProps: {

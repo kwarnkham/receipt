@@ -67,6 +67,18 @@
                     @click="$router.replace({ name: 'createReceipt' })"
                   />
                   <q-btn
+                    icon="save"
+                    flat
+                    color="secondary"
+                    @click="$emitter.emit('updateReceipt', 1)"
+                  />
+                  <q-btn
+                    icon="label"
+                    flat
+                    color="secondary"
+                    @click="$emitter.emit('updateReceipt', 2)"
+                  />
+                  <q-btn
                     v-if="!platform.is.iphone && !platform.is.ipad"
                     icon="download"
                     flat
@@ -88,7 +100,7 @@
                   <q-btn
                     icon="label"
                     flat
-                    @click="$emitter.emit('draftReceipt')"
+                    @click="$emitter.emit('createReceipt', 2)"
                   />
                 </template>
               </q-menu>

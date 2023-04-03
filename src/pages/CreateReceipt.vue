@@ -5,7 +5,10 @@
       height="120"
       alt="logo"
     />
-    <div class="col column relative-position">
+    <div
+      class="col column relative-position"
+      v-if="receipt || $route.name == 'createReceipt'"
+    >
       <img
         :src="getImage(user?.pictures.find((e) => e.type == 2)?.name)"
         alt="background"
@@ -48,7 +51,7 @@ const { getDateDiff, formatDate, addToDate } = date;
 const router = useRouter();
 const { loading, localStorage } = useQuasar();
 const { pageOptions } = useUtility();
-const { createReceipt, findReceipt } = useBackend();
+const { createReceipt, findReceipt, updateReceipt } = useBackend();
 const { errorNotify, successNotify, getImage, warningNotify, isAdmin } =
   useApp();
 const { findUser } = useBackend();
@@ -69,10 +72,49 @@ const addRow = () => {
     price: "",
   });
 };
-const submitDraft = () => {
-  submit(true);
+
+const editReceipt = (status) => {
+  if (receipt.value.status == 1) return;
+  if (!receipt.value) return;
+  if (
+    !header.value.name ||
+    !header.value.orderDate ||
+    !header.value.mobile ||
+    !header.value.address ||
+    !orderItems.value.length
+  ) {
+    errorNotify("Not enough data");
+    return;
+  }
+
+  loading.show();
+  const formData = {
+    date: header.value.orderDate,
+    customer_name: header.value.name,
+    customer_phone: header.value.mobile,
+    customer_address: header.value.address,
+    discount: summery.value.discount,
+    deposit: summery.value.deposit,
+    items: orderItems.value,
+    note: header.value.note || undefined,
+    status,
+  };
+
+  updateReceipt(formData, receipt.value.id)
+    .then((data) => {
+      if (data) {
+        receipt.value = data;
+        preserveItems();
+        preserveUsers();
+        successNotify("Success", { timeout: 500 });
+      }
+    })
+    .finally(() => {
+      loading.hide();
+    });
 };
-const submit = (draft = false) => {
+
+const submit = (draft = 1) => {
   if (receipt.value) return;
   if (
     !header.value.name ||
@@ -99,11 +141,13 @@ const submit = (draft = false) => {
   if (draft) formData.status = "2";
   createReceipt(formData)
     .then((data) => {
-      receipt.value = data;
-      preserveItems();
-      preserveUsers();
-      successNotify("Success", { timeout: 500 });
-      router.push({ name: "receipt", params: { id: data.id } });
+      if (data) {
+        receipt.value = data;
+        preserveItems();
+        preserveUsers();
+        successNotify("Success", { timeout: 500 });
+        router.push({ name: "receipt", params: { id: data.id } });
+      }
     })
     .finally(() => {
       loading.hide();
@@ -255,16 +299,16 @@ onMounted(() => {
   }
 
   emitter.on("createReceipt", submit);
-  emitter.on("draftReceipt", submitDraft);
   // emitter.on("addNewReceipt", resetData);
   emitter.on("print", showPrintView);
   emitter.on("printAddress", showPrintAddressView);
+  emitter.on("updateReceipt", editReceipt);
 });
 onBeforeUnmount(() => {
   emitter.off("createReceipt", submit);
-  emitter.off("draftReceipt", submitDraft);
   // emitter.off("addNewReceipt", resetData);
   emitter.off("print", showPrintView);
   emitter.off("printAddress", showPrintAddressView);
+  emitter.off("updateReceipt", editReceipt);
 });
 </script>
