@@ -110,8 +110,8 @@ const props = defineProps({
 
 const { formatCurrency } = useUtility();
 const { validateNumber, getImage, getPaymentLogo } = useApp();
-const discount = ref(props.receipt.discount);
-const deposit = ref(props.receipt.deposit);
+const discount = ref(props.receipt?.discount ?? 0);
+const deposit = ref(props.receipt?.deposit ?? 0);
 const userStore = useUserStore();
 const total = computed(() =>
   props.items.reduce((carry, item) => carry + item.price * item.quantity, 0)
