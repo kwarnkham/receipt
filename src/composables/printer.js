@@ -7,7 +7,7 @@ export default function usePrinter () {
   const height = ref(0)
   const { printCharacteristic, setPrintCharacteristic } = inject('printer')
   const printId = 'print-this'
-  const { loading } = useQuasar()
+  const { loading, localStorage } = useQuasar()
 
   const sendTextData = (input) => {
     return new Promise((resolve, reject) => {
@@ -102,7 +102,7 @@ export default function usePrinter () {
     let index = 0;
     let imagePrintData = getImagePrintData(imageData);
     const sendNextImageDataBatch = async (resolve, reject) => {
-      const max = 512 / 8;
+      const max = localStorage.getItem("printMaxData") || 512;
       if (index + max < imagePrintData.length) {
         try {
           if (!printCharacteristic.value) reject('no printer conneted')

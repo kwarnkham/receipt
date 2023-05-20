@@ -22,6 +22,15 @@ const routes = [
         },
       },
       {
+        path: "printer-setting",
+        component: () => import("pages/PrinterSetting.vue"),
+        name: "printerSetting",
+        meta: {
+          requireAuth: true,
+          label: "Printer Setting",
+        },
+      },
+      {
         path: "receipt-phone",
         component: () => import("pages/ReceiptPhone.vue"),
         name: "receiptPhone",
