@@ -21,7 +21,19 @@ import usePrinter from "src/composables/printer";
 import { computed, ref, watch } from "vue";
 
 const { localStorage, loading } = useQuasar();
-const printFormat = ref(1);
+const storedPrintMaxData = localStorage.getItem("printMaxData") ?? 512;
+console.log(storedPrintMaxData);
+const printFormats = {
+  512: 1,
+  256: 2,
+  128: 3,
+  64: 4,
+  32: 5,
+  16: 6,
+  8: 7,
+  4: 8,
+};
+const printFormat = ref(printFormats[storedPrintMaxData]);
 const printTarget = ref(null);
 
 const { sendPrinterData, sendTextData } = usePrinter();
