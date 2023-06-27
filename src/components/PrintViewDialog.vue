@@ -180,7 +180,7 @@ const copyForPrint = () => {
     logo_phone:
       props.receipt.user.phones?.length == 0
         ? null
-        : props.receipt.user.phones.join(", "),
+        : props.receipt.user.phones.map((e) => e.number).join(", "),
     a_items: props.receipt.items
       .filter((v) => !!v)
       .map((e) => ({
