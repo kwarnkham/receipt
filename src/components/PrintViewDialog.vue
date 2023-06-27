@@ -123,6 +123,12 @@
           :disabled="printing"
           color="primary"
         ></q-btn>
+        <q-btn
+          v-if="!platform.is.iphone && !platform.is.ipad"
+          icon="content_copy"
+          @click="copyForPrint"
+          color="secondary"
+        ></q-btn>
       </div>
 
       <div class="col"></div>
@@ -131,7 +137,12 @@
 </template>
 
 <script setup>
-import { useDialogPluginComponent, date, useQuasar } from "quasar";
+import {
+  useDialogPluginComponent,
+  date,
+  useQuasar,
+  copyToClipboard,
+} from "quasar";
 import useUtility from "src/composables/utility";
 import { computed, onMounted, ref } from "vue";
 import usePrinter from "src/composables/printer";
@@ -153,6 +164,51 @@ const total = computed(() =>
     0
   )
 );
+
+const copyForPrint = () => {
+  const order = {
+    id: props.receipt.code,
+    amount: total.value,
+    discount: props.receipt.discount,
+    customer: props.receipt.customer_name,
+    phone: props.receipt.customer_phone,
+    address: props.receipt.customer_address,
+    note: props.receipt.note,
+    paid: props.receipt.deposit,
+    created_at: props.receipt.date,
+    logo: getImage(logo.value),
+    logo_phone:
+      props.receipt.user.phones?.length == 0
+        ? null
+        : props.receipt.user.phones.join(", "),
+    a_items: props.receipt.items
+      .filter((v) => !!v)
+      .map((e) => ({
+        id: e.id,
+        name: e.name,
+        price: e.price,
+        pivot: {
+          price: e.pivot.price,
+          quantity: e.pivot.quantity,
+          discount: null,
+        },
+      })),
+  };
+
+  copyToClipboard(JSON.stringify(order))
+    .then(() => {
+      notify({
+        message: "Copied",
+        type: "positive",
+      });
+    })
+    .catch(() => {
+      notify({
+        message: "Copy Failed",
+        type: "negative",
+      });
+    });
+};
 
 const printSize = ref(Number(localStorage.getItem("printSize")) || 1);
 
