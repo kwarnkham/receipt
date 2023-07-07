@@ -116,19 +116,7 @@
           </div>
         </div>
         <q-btn icon="close" @click="onDialogHide"></q-btn>
-        <q-btn
-          v-if="!platform.is.iphone && !platform.is.ipad"
-          :icon="'print'"
-          @click="print"
-          :disabled="printing"
-          color="primary"
-        ></q-btn>
-        <q-btn
-          v-if="!platform.is.iphone && !platform.is.ipad"
-          icon="content_copy"
-          @click="copyForPrint"
-          color="secondary"
-        ></q-btn>
+        <q-btn :icon="'print'" @click="copyForPrint" color="primary"></q-btn>
       </div>
 
       <div class="col"></div>
@@ -145,7 +133,6 @@ import {
 } from "quasar";
 import useUtility from "src/composables/utility";
 import { computed, onMounted, ref } from "vue";
-import usePrinter from "src/composables/printer";
 import useApp from "src/composables/app";
 
 const { formatDate } = date;
@@ -156,7 +143,7 @@ const props = defineProps({
     required: true,
   },
 });
-const { loading, notify, platform, localStorage } = useQuasar();
+const { notify, platform, localStorage } = useQuasar();
 const { getImage } = useApp();
 const total = computed(() =>
   props.receipt.items.reduce(
@@ -197,10 +184,7 @@ const copyForPrint = () => {
 
   copyToClipboard(JSON.stringify(order))
     .then(() => {
-      notify({
-        message: "Copied",
-        type: "positive",
-      });
+      window.open("https://printy.book-mm.com");
     })
     .catch(() => {
       notify({
@@ -216,35 +200,32 @@ const logo = computed(
   () => props.receipt.user.pictures.find((e) => e.type == 3)?.name
 );
 
-const printing = ref(false);
-
 const grandTotal = computed(
   () =>
     total.value -
     (props.receipt ? props.receipt.deposit : deposit.value) -
     (props.receipt ? props.receipt.discount : discount.value)
 );
-const { sendPrinterData, sendTextData } = usePrinter();
 
 const printTime = ref(formatDate(new Date(), "DD-MM-YYYY HH:mm:ss"));
-const print = () => {
-  printing.value = true;
-  sendPrinterData(document.getElementById("print-target"), printSize.value)
-    .then(() => {
-      sendTextData("\u000A\u000D");
-    })
-    .catch((error) => {
-      if (error) notify(error);
-      else notify("Printer has disconnected");
-    })
-    .finally(() => {
-      printing.value = false;
-      loading.hide();
-      localStorage.set("printSize", printSize.value);
-    });
+// const print = () => {
+//   printing.value = true;
+//   sendPrinterData(document.getElementById("print-target"), printSize.value)
+//     .then(() => {
+//       sendTextData("\u000A\u000D");
+//     })
+//     .catch((error) => {
+//       if (error) notify(error);
+//       else notify("Printer has disconnected");
+//     })
+//     .finally(() => {
+//       printing.value = false;
+//       loading.hide();
+//       localStorage.set("printSize", printSize.value);
+//     });
 
-  // sendPrinterData(document.getElementById("foo"));
-};
+//   // sendPrinterData(document.getElementById("foo"));
+// };
 
 defineEmits([
   // REQUIRED; need to specify some events that your
