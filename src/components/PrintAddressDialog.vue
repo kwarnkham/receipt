@@ -45,7 +45,7 @@
         <q-btn
           v-if="!platform.is.iphone && !platform.is.ipad"
           :icon="'print'"
-          @click="print"
+          @click="copyForPrint"
           :disabled="printing"
           color="primary"
         ></q-btn>
@@ -57,21 +57,23 @@
 </template>
 
 <script setup>
-import { useDialogPluginComponent, date, useQuasar } from "quasar";
-import useUtility from "src/composables/utility";
+import {
+  useDialogPluginComponent,
+  date,
+  useQuasar,
+  copyToClipboard,
+} from "quasar";
 import { computed, onMounted, ref } from "vue";
-import usePrinter from "src/composables/printer";
 import useApp from "src/composables/app";
 
 const { formatDate } = date;
-const { formatCurrency } = useUtility();
 const props = defineProps({
   receipt: {
     type: Object,
     required: true,
   },
 });
-const { loading, notify, platform, localStorage } = useQuasar();
+const { notify, platform, localStorage } = useQuasar();
 const { getImage } = useApp();
 const total = computed(() =>
   props.receipt.items.reduce(
@@ -88,32 +90,29 @@ const logo = computed(
 
 const printing = ref(false);
 
-const grandTotal = computed(
-  () =>
-    total.value -
-    (props.receipt ? props.receipt.deposit : deposit.value) -
-    (props.receipt ? props.receipt.discount : discount.value)
-);
-const { sendPrinterData, sendTextData } = usePrinter();
-
 const printTime = ref(formatDate(new Date(), "DD-MM-YYYY HH:mm:ss"));
-const print = () => {
-  printing.value = true;
-  sendPrinterData(document.getElementById("print-target"), printSize.value)
-    .then(() => {
-      sendTextData("\u000A\u000D");
-    })
-    .catch((error) => {
-      if (error) notify(error);
-      else notify("Printer has disconnected");
-    })
-    .finally(() => {
-      printing.value = false;
-      loading.hide();
-      localStorage.set("printSize", printSize.value);
-    });
 
-  // sendPrinterData(document.getElementById("foo"));
+const copyForPrint = () => {
+  const order = {
+    id: props.receipt.code,
+    customer: props.receipt.customer_name,
+    phone: props.receipt.customer_phone,
+    address: props.receipt.customer_address,
+    note: props.receipt.note,
+  };
+
+  const text = `|-- 🆔 : #${order.id} --| |-- 👤 : ${order.customer} --| |-- ☎️ : ${order.phone} ---| |-- 🏡 : ${order.address} --| |-- 📝 : ${order.note} --|`;
+
+  copyToClipboard(text)
+    .then(() => {
+      window.open("https://printy.book-mm.com");
+    })
+    .catch(() => {
+      notify({
+        message: "Copy Failed",
+        type: "negative",
+      });
+    });
 };
 
 defineEmits([
