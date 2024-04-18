@@ -62,7 +62,7 @@
               </td>
 
               <td class="text-right">
-                {{ item.quantity }}
+                {{ item.quantity ?? item.pivot.quantity }}
               </td>
               <td class="text-right">
                 <template v-if="item.price">
@@ -70,8 +70,14 @@
                 </template>
               </td>
               <td class="text-right">
-                <template v-if="item.quantity * item.price">
-                  {{ formatCurrency(item.quantity * item.price) }}
+                <template
+                  v-if="(item.quantity ?? item.pivot.quantity) * item.price"
+                >
+                  {{
+                    formatCurrency(
+                      (item.quantity ?? item.pivot.quantity) * item.price
+                    )
+                  }}
                 </template>
               </td>
             </tr>
